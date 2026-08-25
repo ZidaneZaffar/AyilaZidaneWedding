@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=5">
+<meta name="theme-color" content="#faf7f0">
+<title>Wedding Invitation</title>
+<meta name="description" content="Wedding Invitation">
+<meta property="og:type" content="website">
+<meta property="og:title" id="ogTitle" content="Wedding Invitation">
+<meta property="og:description" id="ogDesc" content="">
+<meta property="og:image" id="ogImage" content="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@300;400;500&family=Pinyon+Script&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="is-locked">
+
+<!-- ============ SVG SPRITE (botanical ornaments + icons) ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-sprig" viewBox="0 0 120 40">
+      <path d="M4 20h112" stroke="currentColor" stroke-width=".8" fill="none" opacity=".55"/>
+      <g fill="currentColor" opacity=".85">
+        <ellipse cx="60" cy="20" rx="4.5" ry="8.5"/>
+        <ellipse cx="48" cy="15" rx="7" ry="3.4" transform="rotate(-18 48 15)"/>
+        <ellipse cx="48" cy="25" rx="7" ry="3.4" transform="rotate(18 48 25)"/>
+        <ellipse cx="72" cy="15" rx="7" ry="3.4" transform="rotate(18 72 15)"/>
+        <ellipse cx="72" cy="25" rx="7" ry="3.4" transform="rotate(-18 72 25)"/>
+        <ellipse cx="36" cy="20" rx="5" ry="2.6"/>
+        <ellipse cx="84" cy="20" rx="5" ry="2.6"/>
+      </g>
+    </symbol>
+    <symbol id="i-leafcorner" viewBox="0 0 200 200">
+      <g fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round">
+        <path d="M6 194C6 108 62 34 150 8"/>
+        <path d="M30 168c22-10 30-30 26-52M30 168c-14-18-12-38 2-52"/>
+        <path d="M62 128c24-6 34-24 34-46M62 128c-16-16-18-36-6-52"/>
+        <path d="M100 88c24-2 36-18 40-40M100 88c-14-18-14-38 0-52"/>
+      </g>
+      <g fill="currentColor" opacity=".5">
+        <ellipse cx="56" cy="116" rx="9" ry="4" transform="rotate(-42 56 116)"/>
+        <ellipse cx="92" cy="76" rx="9" ry="4" transform="rotate(-42 92 76)"/>
+        <ellipse cx="128" cy="40" rx="9" ry="4" transform="rotate(-42 128 40)"/>
+      </g>
+    </symbol>
+    <symbol id="i-rings" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.3"><circle cx="9" cy="15" r="6"/><circle cx="15" cy="15" r="6"/><path d="M12 3.2 9.8 6.6h4.4z"/></g></symbol>
+    <symbol id="i-glasses" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M4 3h6l-1.6 6a1.9 1.9 0 0 1-3.7 0z"/><path d="M7 12v8M5 20.5h4"/><path d="M14 3h6l-1.6 6a1.9 1.9 0 0 1-3.7 0z"/><path d="M17 12v8M15 20.5h4"/></g></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.3"><path d="M12 21s7-6.3 7-11.4A7 7 0 0 0 5 9.6C5 14.7 12 21 12 21z"/><circle cx="12" cy="9.6" r="2.6"/></g></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.3"><rect x="3.5" y="5" width="17" height="16" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/></g></symbol>
+    <symbol id="i-gift" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.3"><rect x="3" y="9" width="18" height="12" rx="2"/><path d="M3 13h18M12 9v12"/><path d="M12 9S10.5 3.8 8 4.2 7 9 12 9zM12 9s1.5-5.2 4-4.8S17 9 12 9z"/></g></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.4"><rect x="9" y="9" width="11" height="12" rx="2"/><path d="M15 6H6a2 2 0 0 0-2 2v9"/></g></symbol>
+    <symbol id="i-note" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></g></symbol>
+    <symbol id="i-quote" viewBox="0 0 32 24"><g fill="currentColor" opacity=".35"><path d="M0 24V13C0 5.8 4.2 1 11 0l1.4 3.4C8.4 4.6 6.3 7 6.2 10.4H12V24zM19 24V13C19 5.8 23.2 1 30 0l1.4 3.4C27.4 4.6 25.3 7 25.2 10.4H31V24z"/></g></symbol>
+  </defs>
+</svg>
+
+<!-- ============ COVER ============ -->
+<section id="cover" class="cover">
+  <div class="cover__bg" aria-hidden="true"></div>
+  <svg class="orn orn--tl" aria-hidden="true"><use href="#i-leafcorner"/></svg>
+  <svg class="orn orn--br" aria-hidden="true"><use href="#i-leafcorner"/></svg>
+
+  <div class="cover__inner">
+    <p class="eyebrow cv-a">The Wedding Of</p>
+    <h1 class="cover__names cv-b" id="coverNames">&nbsp;</h1>
+    <svg class="divider cv-c" aria-hidden="true"><use href="#i-sprig"/></svg>
+    <p class="cover__date cv-c" id="coverDate">&nbsp;</p>
+
+    <div class="cover__guest cv-d">
+      <p class="cover__guest-label">Kepada Yth.</p>
+      <p class="cover__guest-name" id="guestName">&nbsp;</p>
+    </div>
+
+    <button type="button" class="btn btn--open cv-e" id="openBtn">
+      <svg class="btn__ico" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M2.5 7.5 12 14l9.5-6.5"/></g></svg>
+      <span>Buka Undangan</span>
+    </button>
+  </div>
+</section>
+
+<!-- ============ INVITATION ============ -->
+<main id="invitation" class="invitation" aria-hidden="true">
+
+  <!-- QUOTE -->
+  <section class="sec sec--quote" id="sec-quote">
+    <div class="wrap wrap--narrow reveal">
+      <svg class="quote-mark" aria-hidden="true"><use href="#i-quote"/></svg>
+      <p class="quote__text" id="quoteText"></p>
+      <p class="quote__src" id="quoteSrc"></p>
+    </div>
+  </section>
+
+  <!-- COUPLE -->
+  <section class="sec sec--couple" id="sec-couple">
+    <div class="wrap">
+      <header class="sec__head reveal">
+        <p class="eyebrow">Bismillahirrahmanirrahim</p>
+        <h2 class="sec__title">Assalamu'alaikum Wr. Wb.</h2>
+        <p class="sec__lede">Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan pernikahan putra-putri kami:</p>
+        <svg class="divider" aria-hidden="true"><use href="#i-sprig"/></svg>
+      </header>
+
+      <article class="person reveal" id="personBride">
+        <div class="person__portrait"><span class="person__mono" data-mono></span><img alt="" data-photo hidden></div>
+        <h3 class="person__name" data-name></h3>
+        <p class="person__order" data-order></p>
+        <p class="person__parents"><span data-father></span><br><span class="amp">&amp;</span><br><span data-mother></span></p>
+        <a class="person__ig" data-ig hidden target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></g></svg>
+        </a>
+      </article>
+
+      <div class="amp-big reveal" aria-hidden="true">&amp;</div>
+
+      <article class="person reveal" id="personGroom">
+        <div class="person__portrait"><span class="person__mono" data-mono></span><img alt="" data-photo hidden></div>
+        <h3 class="person__name" data-name></h3>
+        <p class="person__order" data-order></p>
+        <p class="person__parents"><span data-father></span><br><span class="amp">&amp;</span><br><span data-mother></span></p>
+        <a class="person__ig" data-ig hidden target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor" stroke="none"/></g></svg>
+        </a>
+      </article>
+    </div>
+  </section>
+
+  <!-- COUNTDOWN -->
+  <section class="sec sec--count" id="sec-countdown">
+    <div class="wrap reveal">
+      <p class="eyebrow eyebrow--light">Menuju Hari Bahagia</p>
+      <h2 class="sec__title sec__title--light" id="countDate"></h2>
+      <div class="count" id="countdown" role="timer" aria-live="off">
+        <div class="count__cell"><span class="count__num" data-cd="d">00</span><span class="count__lbl">Hari</span></div>
+        <div class="count__cell"><span class="count__num" data-cd="h">00</span><span class="count__lbl">Jam</span></div>
+        <div class="count__cell"><span class="count__num" data-cd="m">00</span><span class="count__lbl">Menit</span></div>
+        <div class="count__cell"><span class="count__num" data-cd="s">00</span><span class="count__lbl">Detik</span></div>
+      </div>
+      <p class="count__done" id="countDone" hidden>Alhamdulillah — hari bahagia telah tiba.</p>
+      <a class="btn btn--ghost" id="calBtn" target="_blank" rel="noopener">
+        <svg class="btn__ico" aria-hidden="true"><use href="#i-cal"/></svg>
+        <span>Save the Date</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- EVENTS -->
+  <section class="sec sec--events" id="sec-events">
+    <div class="wrap">
+      <header class="sec__head reveal">
+        <p class="eyebrow">Save The Date</p>
+        <h2 class="sec__title">Rangkaian Acara</h2>
+        <svg class="divider" aria-hidden="true"><use href="#i-sprig"/></svg>
+      </header>
+      <div class="events" id="eventsList"></div>
+    </div>
+  </section>
+
+  <!-- VENUE / MAPS -->
+  <section class="sec sec--venue" id="sec-venue">
+    <div class="wrap">
+      <header class="sec__head reveal">
+        <p class="eyebrow">Lokasi Acara</p>
+        <h2 class="sec__title" id="venueName"></h2>
+      </header>
+      <a class="venue__address reveal" id="venueAddress" target="_blank" rel="noopener">
+        <svg class="venue__pin" aria-hidden="true"><use href="#i-pin"/></svg>
+        <span id="venueAddressText"></span>
+        <span class="venue__cta">Buka di Google Maps →</span>
+      </a>
+      <div class="map reveal">
+        <iframe id="mapFrame" title="Peta lokasi acara" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+      </div>
+    </div>
+  </section>
+
+  <!-- RSVP -->
+  <section class="sec sec--rsvp" id="sec-rsvp">
+    <div class="wrap wrap--narrow">
+      <header class="sec__head reveal">
+        <p class="eyebrow">RSVP</p>
+        <h2 class="sec__title">Konfirmasi Kehadiran</h2>
+        <p class="sec__lede">Mohon konfirmasi kehadiran Anda dan tinggalkan pesan untuk kedua mempelai.</p>
+        <svg class="divider" aria-hidden="true"><use href="#i-sprig"/></svg>
+      </header>
+
+      <form class="form reveal" id="rsvpForm" novalidate>
+        <div class="field">
+          <label for="fName">Nama Lengkap <span class="req">*</span></label>
+          <input type="text" id="fName" name="name" autocomplete="name" required maxlength="80" placeholder="Nama Anda">
+          <p class="err" data-err="name"></p>
+        </div>
+
+        <div class="field">
+          <span class="label">Konfirmasi Kehadiran <span class="req">*</span></span>
+          <div class="segmented" role="radiogroup" aria-label="Konfirmasi Kehadiran">
+            <label class="seg"><input type="radio" name="attendance" value="Hadir" required><span>Hadir</span></label>
+            <label class="seg"><input type="radio" name="attendance" value="Tidak Hadir"><span>Tidak Hadir</span></label>
+          </div>
+          <p class="err" data-err="attendance"></p>
+        </div>
+
+        <div class="field" id="guestsField">
+          <label for="fGuests">Jumlah Tamu</label>
+          <div class="stepper">
+            <button type="button" class="stepper__btn" data-step="-1" aria-label="Kurangi">−</button>
+            <input type="number" id="fGuests" name="guests" value="1" min="1" max="5" inputmode="numeric" readonly>
+            <button type="button" class="stepper__btn" data-step="1" aria-label="Tambah">+</button>
+          </div>
+          <p class="hint" id="guestsHint">Termasuk Anda sendiri.</p>
+        </div>
+
+        <div class="field">
+          <label for="fMessage">Ucapan &amp; Doa <span class="req">*</span></label>
+          <textarea id="fMessage" name="message" rows="4" required maxlength="500" placeholder="Tulis ucapan dan doa terbaik Anda…"></textarea>
+          <p class="hint"><span id="charCount">0</span>/500</p>
+          <p class="err" data-err="message"></p>
+        </div>
+
+        <button type="submit" class="btn btn--solid" id="submitBtn">
+          <span class="btn__label">Kirim Ucapan</span>
+          <span class="spinner" aria-hidden="true"></span>
+        </button>
+        <p class="form__status" id="formStatus" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- WISHES -->
+  <section class="sec sec--wishes" id="sec-wishes">
+    <div class="wrap wrap--narrow">
+      <header class="sec__head reveal">
+        <p class="eyebrow">Ucapan &amp; Doa</p>
+        <h2 class="sec__title">Wedding Wishes</h2>
+        <p class="sec__lede"><span id="wishCount">0</span> ucapan telah dikirim</p>
+        <svg class="divider" aria-hidden="true"><use href="#i-sprig"/></svg>
+      </header>
+      <div class="wishes" id="wishesList" aria-live="polite">
+        <div class="wishes__empty" id="wishesEmpty">
+          <svg class="wishes__empty-ico" aria-hidden="true"><use href="#i-quote"/></svg>
+          <p>Belum ada ucapan. Jadilah yang pertama mengirim doa.</p>
+        </div>
+      </div>
+      <button type="button" class="btn btn--ghost btn--sm" id="moreWishes" hidden>Lihat Lebih Banyak</button>
+    </div>
+  </section>
+
+  <!-- GIFT -->
+  <section class="sec sec--gift" id="sec-gift">
+    <div class="wrap wrap--narrow">
+      <header class="sec__head reveal">
+        <svg class="gift__ico" aria-hidden="true"><use href="#i-gift"/></svg>
+        <h2 class="sec__title" id="giftHeading"></h2>
+        <p class="sec__lede" id="giftIntro"></p>
+      </header>
+      <div class="gift" id="giftAccounts"></div>
+      <div class="gift-addr reveal" id="giftAddress"></div>
+    </div>
+  </section>
+
+  <!-- CLOSING -->
+  <section class="sec sec--closing" id="sec-closing">
+    <svg class="orn orn--tl orn--light" aria-hidden="true"><use href="#i-leafcorner"/></svg>
+    <svg class="orn orn--br orn--light" aria-hidden="true"><use href="#i-leafcorner"/></svg>
+    <div class="wrap wrap--narrow reveal">
+      <p class="closing__text" id="closingText"></p>
+      <p class="closing__salam">Wassalamu'alaikum Wr. Wb.</p>
+      <p class="closing__signoff" id="closingSignoff"></p>
+      <h2 class="closing__names" id="closingNames"></h2>
+      <svg class="divider divider--light" aria-hidden="true"><use href="#i-sprig"/></svg>
+      <p class="closing__families" id="closingFamilies"></p>
+    </div>
+    <footer class="foot">
+      <p id="footNames"></p>
+      <p class="foot__meta">Made with love · 2026</p>
+    </footer>
+  </section>
+</main>
+
+<!-- FLOATING MUSIC BUTTON -->
+<button type="button" class="music" id="musicBtn" hidden aria-label="Putar musik">
+  <svg class="music__ico" aria-hidden="true"><use href="#i-note"/></svg>
+  <span class="music__ring" aria-hidden="true"></span>
+</button>
+<audio id="audio" loop preload="none"></audio>
+
+<!-- TOAST -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

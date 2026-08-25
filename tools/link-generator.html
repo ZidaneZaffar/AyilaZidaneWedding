@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Guest Link Generator — Ayila &amp; Zidane</title>
+<style>
+  :root{--ink:#2c352d;--sage:#66755a;--ivory:#faf7f0;--line:rgba(138,154,123,.3)}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--ivory);color:var(--ink);font:15px/1.7 "Jost",system-ui,sans-serif;padding:28px 18px}
+  .w{max-width:760px;margin:auto}
+  h1{font:400 28px/1.2 "Cormorant Garamond",Georgia,serif;margin:0 0 6px}
+  p.sub{margin:0 0 24px;color:#7d8378;font-size:14px}
+  label{display:block;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#4a544a;margin-bottom:6px}
+  input,textarea{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:10px;background:#fffdf8;font:inherit;margin-bottom:18px}
+  textarea{min-height:150px;resize:vertical}
+  button{background:var(--sage);color:#fffdf8;border:0;border-radius:999px;padding:13px 26px;font:inherit;font-size:12px;letter-spacing:.16em;text-transform:uppercase;cursor:pointer}
+  button.ghost{background:transparent;color:var(--sage);border:1px solid var(--sage)}
+  .row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+  table{width:100%;border-collapse:collapse;background:#fffdf8;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--line);font-size:13px;vertical-align:top}
+  th{background:#eee9dc;font-size:10px;letter-spacing:.14em;text-transform:uppercase}
+  td.link{word-break:break-all;color:var(--sage)}
+  td.act{white-space:nowrap;width:1%}
+  td.act button{padding:7px 12px;font-size:10px}
+  tr:last-child td{border-bottom:0}
+</style>
+</head>
+<body>
+<div class="w">
+  <h1>Guest Link Generator</h1>
+  <p class="sub">Buat link undangan personal untuk setiap tamu. Nama tamu akan muncul otomatis di halaman sampul.</p>
+
+  <label for="base">URL Undangan</label>
+  <input id="base" type="url" placeholder="https://username.github.io/wedding-ayila-zidane/">
+
+  <label for="names">Daftar Nama Tamu — satu nama per baris</label>
+  <textarea id="names" placeholder="Ade Fitriyani&#10;Bapak Budi Santoso &amp; Keluarga&#10;Rina Wulandari"></textarea>
+
+  <div class="row">
+    <button id="gen">Buat Link</button>
+    <button id="csv" class="ghost">Unduh CSV</button>
+    <button id="copyAll" class="ghost">Salin Semua</button>
+  </div>
+
+  <table id="out" hidden><thead><tr><th>Nama</th><th>Link</th><th></th></tr></thead><tbody></tbody></table>
+</div>
+
+<script>
+var rows = [];
+function build(){
+  var base = document.getElementById('base').value.trim();
+  if(!base){ alert('Isi URL undangan terlebih dahulu.'); return; }
+  if(!/\/$/.test(base) && !/\.html$/.test(base)) base += '/';
+  rows = document.getElementById('names').value.split('\n')
+    .map(function(s){return s.trim();}).filter(Boolean)
+    .map(function(n){ return {name:n, url: base + '?to=' + encodeURIComponent(n)}; });
+
+  var tb = document.querySelector('#out tbody');
+  tb.innerHTML = rows.map(function(r,i){
+    return '<tr><td>'+r.name.replace(/</g,'&lt;')+'</td><td class="link">'+r.url.replace(/</g,'&lt;')+
+           '</td><td class="act"><button data-i="'+i+'" class="ghost">Salin</button></td></tr>';
+  }).join('');
+  document.getElementById('out').hidden = !rows.length;
+}
+document.getElementById('gen').onclick = build;
+document.querySelector('#out').addEventListener('click', function(e){
+  var b = e.target.closest('button[data-i]'); if(!b) return;
+  navigator.clipboard.writeText(rows[b.dataset.i].url);
+  b.textContent = 'Tersalin'; setTimeout(function(){ b.textContent='Salin'; }, 1500);
+});
+document.getElementById('copyAll').onclick = function(){
+  if(!rows.length) return build();
+  navigator.clipboard.writeText(rows.map(function(r){return r.name+' — '+r.url;}).join('\n'));
+  this.textContent='Tersalin'; var b=this; setTimeout(function(){b.textContent='Salin Semua';},1500);
+};
+document.getElementById('csv').onclick = function(){
+  if(!rows.length) build();
+  var csv = 'Nama,Link\n' + rows.map(function(r){return '"'+r.name.replace(/"/g,'""')+'","'+r.url+'"';}).join('\n');
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download = 'guest-links.csv'; a.click();
+};
+</script>
+</body>
+</html>
