@@ -91,8 +91,8 @@ window.WEDDING_CONFIG = {
     intro:    "Doa restu Anda adalah hadiah terindah bagi kami. Namun apabila memberi adalah tanda kasih, kami menerimanya dengan senang hati.",
     accounts: [
       {
-        bank:   "BANK_NAME",                  // e.g. "BCA"
-        number: "0000000000",                 // e.g. "1234567890"
+        bank:   "BCA",                  // e.g. "BCA"
+        number: "8691854035",                 // e.g. "1234567890"
         holder: "M Zidane Zaffar",
         logo:   ""                            // optional: "assets/img/bca.png"
       }
