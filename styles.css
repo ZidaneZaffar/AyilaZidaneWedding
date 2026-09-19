@@ -241,6 +241,78 @@ body::after{
   line-height:1; margin:34px 0; opacity:.9;
 }
 
+/* ---------- PREWEDDING GALLERY ---------- */
+.sec--gallery{background:linear-gradient(180deg,var(--ivory),var(--ivory-2))}
+.gallery-tabs{display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-bottom:26px}
+.gtab{
+  display:inline-flex; align-items:center; gap:8px; cursor:pointer;
+  background:var(--paper); border:1px solid var(--line); border-radius:999px;
+  padding:11px 20px; font-size:10.5px; letter-spacing:.16em; text-transform:uppercase;
+  color:var(--ink-2); transition:background .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease), box-shadow .3s var(--ease);
+}
+.gtab__ico{width:15px; height:15px; flex:none; color:var(--sage-d); transition:color .3s var(--ease)}
+.gtab.is-active{background:var(--sage-d); border-color:var(--sage-d); color:var(--paper); box-shadow:0 8px 20px rgba(102,117,90,.25)}
+.gtab.is-active .gtab__ico{color:var(--paper)}
+
+.gallery-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:10px}
+.gtile{
+  position:relative; aspect-ratio:4/5; border-radius:12px; overflow:hidden;
+  border:1px solid var(--line); background:var(--ivory-2); cursor:pointer; padding:0;
+  box-shadow:var(--shadow-s); transition:transform .35s var(--ease); -webkit-tap-highlight-color:transparent;
+}
+.gtile:active{transform:scale(.97)}
+.gtile img{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+  opacity:0; transition:opacity .6s var(--ease), transform .6s var(--ease);
+}
+.gtile.is-ready img{opacity:1}
+@media (hover:hover){ .gtile:not(.is-empty):hover img{transform:scale(1.07)} }
+.gtile__ph{
+  position:absolute; inset:0; display:grid; place-items:center; gap:7px;
+  background:linear-gradient(160deg,var(--ivory-3),var(--ivory-2)); color:var(--sage);
+  opacity:1; transition:opacity .4s var(--ease); text-align:center; padding:10px;
+}
+.gtile.is-ready .gtile__ph{opacity:0; pointer-events:none}
+.gtile__ph svg{width:24px; height:24px; margin:0 auto}
+.gtile__ph em{display:block; font-style:normal; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
+.gtile.is-empty{cursor:default}
+
+@media (min-width:700px){
+  .gallery-grid{grid-template-columns:repeat(3,1fr); gap:14px}
+}
+
+/* ---------- LIGHTBOX ---------- */
+.lightbox{
+  position:fixed; inset:0; z-index:80; display:grid; place-items:center;
+  background:rgba(20,24,20,.94); opacity:0; visibility:hidden; pointer-events:none;
+  transition:opacity .35s var(--ease), visibility 0s .35s;
+  padding:calc(env(safe-area-inset-top) + 14px) 14px calc(env(safe-area-inset-bottom) + 14px);
+}
+.lightbox.is-open{opacity:1; visibility:visible; pointer-events:auto; transition:opacity .35s var(--ease)}
+.lightbox__stage{position:relative; max-width:min(560px,92vw); text-align:center}
+.lightbox__stage img{
+  max-width:100%; max-height:74vh; border-radius:10px; margin:0 auto; display:block;
+  box-shadow:0 20px 60px rgba(0,0,0,.4); transform:scale(.96); transition:transform .35s var(--ease);
+}
+.lightbox.is-open .lightbox__stage img{transform:scale(1)}
+.lightbox__caption{margin:16px 0 0; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:rgba(255,253,248,.75)}
+.lightbox__close,.lightbox__nav{
+  position:fixed; display:grid; place-items:center; cursor:pointer;
+  width:42px; height:42px; border-radius:50%; border:1px solid rgba(255,253,248,.3);
+  background:rgba(255,253,248,.08); color:var(--paper); backdrop-filter:blur(4px);
+  transition:background .25s;
+}
+.lightbox__close:active,.lightbox__nav:active{background:rgba(255,253,248,.22)}
+.lightbox__close{top:calc(env(safe-area-inset-top) + 16px); right:16px}
+.lightbox__nav svg,.lightbox__close svg{width:17px; height:17px}
+.lightbox__nav--prev{left:10px; top:50%; transform:translateY(-50%)}
+.lightbox__nav--next{right:10px; top:50%; transform:translateY(-50%)}
+.lightbox__nav--next svg{transform:scaleX(-1)}
+@media (min-width:700px){
+  .lightbox__nav--prev{left:26px}
+  .lightbox__nav--next{right:26px}
+}
+
 /* ---------- COUNTDOWN ---------- */
 .sec--count{
   background:
