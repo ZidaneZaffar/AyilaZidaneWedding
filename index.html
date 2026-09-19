@@ -111,13 +111,12 @@
       <header class="sec__head reveal">
         <p class="eyebrow">Gallery</p>
         <h2 class="sec__title" id="galleryTitle"></h2>
-        <p class="sec__lede" id="galleryIntro"></p>
         <img class="divider" src="assets/img/divider.png" alt="">
       </header>
     </div>
     <div class="gallery-marquee reveal" id="galleryGrid">
       <div class="gallery-row"><div class="gallery-track" id="galleryRow1"></div></div>
-      <div class="gallery-row"><div class="gallery-track gallery-track--rev" id="galleryRow2"></div></div>
+      <div class="gallery-row"><div class="gallery-track" id="galleryRow2"></div></div>
     </div>
   </section>
 
@@ -149,22 +148,7 @@
         <img class="divider" src="assets/img/divider.png" alt="">
       </header>
       <div class="events" id="eventsList"></div>
-    </div>
-  </section>
-
-  <!-- VENUE / MAPS -->
-  <section class="sec sec--venue" id="sec-venue">
-    <div class="wrap">
-      <header class="sec__head reveal">
-        <p class="eyebrow">Lokasi Acara</p>
-        <h2 class="sec__title" id="venueName"></h2>
-      </header>
-      <a class="venue__address reveal" id="venueAddress" target="_blank" rel="noopener">
-        <svg class="venue__pin" aria-hidden="true"><use href="#i-pin"/></svg>
-        <span id="venueAddressText"></span>
-        <span class="venue__cta">Buka di Google Maps →</span>
-      </a>
-      <div class="map reveal">
+      <div class="map map--events reveal">
         <iframe id="mapFrame" title="Peta lokasi acara" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
       </div>
     </div>
@@ -250,6 +234,8 @@
         <p class="sec__lede" id="giftIntro"></p>
       </header>
       <div class="gift" id="giftAccounts"></div>
+      <div class="gift-qris reveal" id="giftQris" hidden></div>
+      <div class="gift-card gift-registry reveal" id="giftRegistry" hidden></div>
       <div class="gift-addr reveal" id="giftAddress"></div>
     </div>
   </section>

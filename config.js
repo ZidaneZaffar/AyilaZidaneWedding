@@ -47,7 +47,6 @@ window.WEDDING_CONFIG = {
      placeholder until the file exists.                            */
   gallery: {
     title: "Gallery",
-    intro: "Momen-momen prewedding kami — tenis, taman, dan museum.",
     concepts: [
       {
         key:   "tenis",
@@ -153,6 +152,15 @@ window.WEDDING_CONFIG = {
       // Add a second account by copying the block above:
       // , { bank: "MANDIRI", number: "0000000000", holder: "Ayila Adzkiya Sucahyo", logo: "" }
     ],
+    // Optional — leave image: "" to hide this card entirely.
+    qris: {
+      image: "assets/img/qris.jpg"
+    },
+    // Optional — leave url: "" to hide this card entirely.
+    registry: {
+      text: "Atau pilih hadiah dari wishlist kami",
+      url:  "https://www.myregistry.com/giftlist/ayila-zidane"
+    },
     address: {
       label: "Kirim Hadiah",
       value: "Pesona Sanfrancisco Q2/21 Kota Wisata, Ciangsana, Kec. Gn. Putri, Kabupaten Bogor, Jawa Barat 16968",

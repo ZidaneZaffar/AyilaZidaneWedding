@@ -241,16 +241,13 @@ body::after{
 /* ---------- GALLERY ---------- */
 .sec--gallery{background:linear-gradient(180deg,var(--ivory),var(--ivory-2))}
 
-.gallery-marquee{display:flex; flex-direction:column; gap:10px; margin-top:36px; overflow:hidden}
-.gallery-row{overflow:hidden}
-.gallery-row.is-manual{overflow-x:auto; -webkit-overflow-scrolling:touch}
-.gallery-track{display:flex; gap:10px; width:max-content; padding:0 4px;
-  animation-name:marquee; animation-timing-function:linear; animation-iteration-count:infinite;
+.gallery-marquee{display:flex; flex-direction:column; gap:10px; margin-top:36px}
+.gallery-row{
+  width:100%; min-width:0; overflow-x:auto; overflow-y:hidden; -webkit-overflow-scrolling:touch;
+  scrollbar-width:none; -ms-overflow-style:none; overflow-anchor:none;
 }
-.gallery-track--rev{animation-direction:reverse}
-@keyframes marquee{from{transform:translateX(0)} to{transform:translateX(-50%)}}
-@media (hover:hover){ .gallery-row:hover .gallery-track{animation-play-state:paused} }
-@media (prefers-reduced-motion:reduce){ .gallery-track{animation:none} }
+.gallery-row::-webkit-scrollbar{display:none}
+.gallery-track{display:flex; gap:10px; width:max-content; padding:0 4px}
 
 .gtile{
   position:relative; flex:none; width:130px; aspect-ratio:4/5; border-radius:12px; overflow:hidden;
@@ -295,7 +292,7 @@ body::after{
 .lightbox.is-open .lightbox__stage img{transform:scale(1)}
 .lightbox__caption{margin:16px 0 0; font-size:13px; letter-spacing:.2em; text-transform:uppercase; color:rgba(243,242,233,.75)}
 .lightbox__close,.lightbox__nav{
-  position:fixed; display:grid; place-items:center; cursor:pointer;
+  position:fixed; z-index:2; display:grid; place-items:center; cursor:pointer;
   width:42px; height:42px; border-radius:50%; border:1px solid rgba(243,242,233,.3);
   background:rgba(243,242,233,.08); color:var(--paper); backdrop-filter:blur(4px);
   transition:background .25s;
@@ -368,26 +365,13 @@ body::after{
 .chip svg{width:14px; height:14px}
 .chip:active{background:var(--sage-d); color:var(--paper)}
 
-/* ---------- VENUE ---------- */
-.sec--venue{background:var(--ivory-2)}
-.venue__address{
-  display:block; text-align:center; text-decoration:none;
-  background:var(--paper); border:1px solid var(--line); border-radius:var(--r);
-  padding:24px 20px; box-shadow:var(--shadow-s); margin-bottom:18px;
-  transition:box-shadow .3s var(--ease), transform .3s var(--ease);
-}
-.venue__address:active{transform:scale(.99); box-shadow:var(--shadow-m)}
-.venue__pin{width:26px; height:26px; color:var(--gold); margin:0 auto 10px; display:block}
-.venue__address span{display:block; font-size:15.5px; line-height:1.8; color:var(--ink-2)}
-.venue__cta{
-  margin-top:14px; font-size:12.5px; letter-spacing:.2em;
-  text-transform:uppercase; color:var(--sage-d) !important;
-}
+/* ---------- MAP ---------- */
 .map{
   border-radius:var(--r); overflow:hidden; border:1px solid var(--line);
   box-shadow:var(--shadow-s); background:var(--ivory-3);
 }
 .map iframe{width:100%; height:260px; border:0; display:block; filter:saturate(.85)}
+.map--events{margin-top:18px}
 
 /* ---------- FORM ---------- */
 .sec--rsvp{background:linear-gradient(180deg,var(--ivory-2),var(--ivory))}
@@ -506,6 +490,15 @@ textarea{resize:vertical; min-height:110px; line-height:1.7}
 .copy:active{transform:scale(.96)}
 .copy.done{background:var(--gold)}
 .copy svg{width:14px; height:14px}
+.gift-qris{margin-top:16px; text-align:center}
+.gift-qris__img{
+  width:100%; max-width:260px; margin:0 auto; border-radius:var(--r);
+  border:1px solid var(--line); box-shadow:var(--shadow-s);
+}
+.gift-qris__label{margin:12px 0 0; font-size:12.5px; color:var(--muted); letter-spacing:.04em}
+.gift-registry{margin-top:14px}
+.gift-registry__text{margin:0 0 14px; font-size:14.5px; color:var(--muted); line-height:1.7}
+.gift-registry .btn--solid{margin-top:0}
 .gift-addr{
   margin-top:16px; background:var(--paper); border:1px dashed var(--line);
   border-radius:var(--r); padding:22px 20px; text-align:center;
