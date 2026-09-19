@@ -87,8 +87,10 @@
 
   /* ---------------------------------------------------------
      GALLERY + LIGHTBOX
-     All photos from every shoot are flattened into one continuous
-     2-column grid — no tabs, just scroll.
+     All photos from every shoot are flattened into two rows that
+     auto-scroll horizontally in opposite directions (no tabs, no
+     manual paging) — each row's track is duplicated once so the
+     CSS animation loops seamlessly.
      --------------------------------------------------------- */
   (function gallery() {
     var G = C.gallery;
@@ -99,7 +101,8 @@
     $("#galleryTitle").textContent = G.title || "Gallery";
     $("#galleryIntro").textContent = G.intro || "";
 
-    var gridEl = $("#galleryGrid");
+    var marqueeEl = $("#galleryGrid");
+    var row1 = $("#galleryRow1"), row2 = $("#galleryRow2");
     var photos = [];
     G.concepts.forEach(function (c) {
       c.photos.forEach(function (src, i) {
@@ -107,23 +110,43 @@
       });
     });
 
-    function renderGrid() {
-      gridEl.innerHTML = photos.map(function (p, i) {
-        return '' +
-        '<button type="button" class="gtile" data-idx="' + i + '" aria-label="Lihat foto ' + (i + 1) + ' — ' + esc(p.label) + '">' +
-          '<img data-src="' + esc(p.src) + '" alt="' + esc(p.label) + ' ' + p.n + '">' +
-          '<span class="gtile__ph"><svg aria-hidden="true"><use href="#i-' + esc(p.icon) + '"/></svg><em>Segera Hadir</em></span>' +
-        '</button>';
-      }).join("");
-      $$(".gtile img", gridEl).forEach(function (img) {
-        img.loading = "lazy";
-        img.onload  = function () { img.closest(".gtile").classList.add("is-ready"); };
-        img.onerror = function () { img.closest(".gtile").classList.add("is-empty"); img.remove(); };
-        img.src = img.dataset.src;
-      });
+    var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function tileHTML(p, i) {
+      return '' +
+      '<button type="button" class="gtile" data-idx="' + i + '" aria-label="Lihat foto ' + (i + 1) + ' — ' + esc(p.label) + '">' +
+        '<img data-src="' + esc(p.src) + '" alt="' + esc(p.label) + ' ' + p.n + '">' +
+        '<span class="gtile__ph"><svg aria-hidden="true"><use href="#i-' + esc(p.icon) + '"/></svg><em>Segera Hadir</em></span>' +
+      '</button>';
     }
 
-    renderGrid();
+    function fillRow(trackEl, idxList) {
+      var html = idxList.map(function (i) { return tileHTML(photos[i], i); }).join("");
+      trackEl.innerHTML = reduceMotion ? html : html + html; // duplicate for seamless loop
+      if (reduceMotion) trackEl.parentElement.classList.add("is-manual");
+    }
+
+    var idxA = [], idxB = [];
+    photos.forEach(function (p, i) { (i % 2 === 0 ? idxA : idxB).push(i); });
+    fillRow(row1, idxA);
+    fillRow(row2, idxB);
+
+    $$(".gtile img", marqueeEl).forEach(function (img) {
+      img.loading = "lazy";
+      img.onload  = function () { img.closest(".gtile").classList.add("is-ready"); };
+      img.onerror = function () { img.closest(".gtile").classList.add("is-empty"); img.remove(); };
+      img.src = img.dataset.src;
+    });
+
+    if (!reduceMotion) {
+      // Speed is constant px/sec regardless of photo count, so the
+      // motion always reads as slow and "halus" (smooth), not rushed.
+      var PX_PER_SEC = 26;
+      [row1, row2].forEach(function (track) {
+        var setWidth = track.scrollWidth / 2;
+        track.style.animationDuration = (setWidth / PX_PER_SEC) + "s";
+      });
+    }
 
     // ---- Lightbox ----
     var lb = $("#lightbox"), lbImg = $("#lightboxImg"), lbCap = $("#lightboxCaption");
@@ -152,7 +175,7 @@
       updateLightbox();
     }
 
-    gridEl.addEventListener("click", function (e) {
+    marqueeEl.addEventListener("click", function (e) {
       var t = e.target.closest(".gtile");
       if (!t || t.classList.contains("is-empty")) return;
       openLightbox(parseInt(t.dataset.idx, 10));
