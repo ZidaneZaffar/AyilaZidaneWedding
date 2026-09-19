@@ -105,14 +105,30 @@
       var sec = $("#sec-gallery"); if (sec) sec.remove();
       return;
     }
-    $("#galleryTitle").textContent = G.title || "Gallery";
 
-    var marqueeEl = $("#galleryGrid");
-    var row1 = $("#galleryRow1"), row2 = $("#galleryRow2");
+    var galleryGrid = $("#galleryGrid"), galleryGridLS = $("#galleryGridLS");
+    var row1 = $("#galleryRow1"), row2 = $("#galleryRow2"), rowLS = $("#galleryRowLS");
+
+    // Portrait and landscape photos are flattened into ONE array (shared
+    // by the lightbox, so prev/next crosses both rows) but tracked into
+    // separate row index-lists, since landscape tiles use a different
+    // aspect ratio and can't share a row with portrait ones. Each
+    // concept's `photos`/`landscape` list can be any length -- nothing
+    // here assumes they match each other or match between concepts.
     var photos = [];
+    var idxA = [], idxB = [], idxLS = [];
     G.concepts.forEach(function (c) {
-      c.photos.forEach(function (src, i) {
-        photos.push({ src: src, icon: c.icon, label: c.label, n: i + 1 });
+      (c.photos || []).forEach(function (src, i) {
+        var gi = photos.length;
+        photos.push({ src: src, icon: c.icon, label: c.label, n: i + 1, ls: false });
+        (gi % 2 === 0 ? idxA : idxB).push(gi);
+      });
+    });
+    G.concepts.forEach(function (c) {
+      (c.landscape || []).forEach(function (src, i) {
+        var gi = photos.length;
+        photos.push({ src: src, icon: c.icon, label: c.label, n: i + 1, ls: true });
+        idxLS.push(gi);
       });
     });
 
@@ -120,7 +136,7 @@
 
     function tileHTML(p, i) {
       return '' +
-      '<button type="button" class="gtile" data-idx="' + i + '" aria-label="Lihat foto ' + (i + 1) + ' — ' + esc(p.label) + '">' +
+      '<button type="button" class="gtile' + (p.ls ? " gtile--ls" : "") + '" data-idx="' + i + '" aria-label="Lihat foto ' + (i + 1) + ' — ' + esc(p.label) + '">' +
         '<img data-src="' + esc(p.src) + '" alt="' + esc(p.label) + ' ' + p.n + '">' +
         '<span class="gtile__ph"><svg aria-hidden="true"><use href="#i-' + esc(p.icon) + '"/></svg><em>Segera Hadir</em></span>' +
       '</button>';
@@ -131,36 +147,50 @@
       trackEl.innerHTML = reduceMotion ? html : html + html; // duplicate for seamless loop
     }
 
-    var idxA = [], idxB = [];
-    photos.forEach(function (p, i) { (i % 2 === 0 ? idxA : idxB).push(i); });
     fillRow(row1, idxA);
     fillRow(row2, idxB);
+    if (idxLS.length) fillRow(rowLS, idxLS);
+    else { var secLS = $("#sec-gallery-ls"); if (secLS) secLS.remove(); galleryGridLS = null; }
 
-    $$(".gtile img", marqueeEl).forEach(function (img) {
-      img.loading = "lazy";
-      img.decoding = "async";
-      img.onload  = function () { img.closest(".gtile").classList.add("is-ready"); };
-      img.onerror = function () { img.closest(".gtile").classList.add("is-empty"); img.remove(); };
-      img.src = img.dataset.src;
+    [galleryGrid, galleryGridLS].forEach(function (marqueeEl) {
+      if (!marqueeEl) return;
+      $$(".gtile img", marqueeEl).forEach(function (img) {
+        img.loading = "lazy";
+        img.decoding = "async";
+        img.onload  = function () { img.closest(".gtile").classList.add("is-ready"); };
+        img.onerror = function () { img.closest(".gtile").classList.add("is-empty"); img.remove(); };
+        img.src = img.dataset.src;
+      });
+      marqueeEl.addEventListener("click", function (e) {
+        var t = e.target.closest(".gtile");
+        if (!t || t.classList.contains("is-empty")) return;
+        openLightbox(parseInt(t.dataset.idx, 10));
+      });
     });
 
     // Auto-scroll is driven from JS (not a CSS animation) so the row
     // stays a genuine native-scroll container the guest can grab and
     // drag/swipe at any time — dragging just pauses the auto-advance
-    // for a moment rather than fighting it.
+    // for a moment rather than fighting it. Speed is tracked in
+    // px/second and stepped by the real frame delta (not a fixed
+    // per-frame amount) so it moves at the same visual speed on a
+    // 60Hz and a 120Hz screen alike, instead of the 120Hz one looking
+    // twice as fast/jittery.
     if (!reduceMotion) {
-      [{ track: row1, dir: 1 }, { track: row2, dir: -1 }].forEach(function (row) {
+      var rows = [{ track: row1, dir: 1 }, { track: row2, dir: -1 }];
+      if (idxLS.length) rows.push({ track: rowLS, dir: 1 });
+      rows.forEach(function (row) {
         var el = row.track.parentElement; // the scrollable .gallery-row
         var half = row.track.scrollWidth / 2;
         if (!half) return;
-        var PX_PER_FRAME = 0.45; // ~27px/s at 60fps — slow and "halus"
+        var PX_PER_SEC = 27; // slow and "halus"
         // Position is tracked as our own float, not read back from
         // el.scrollLeft (which the browser stores as an integer) —
-        // otherwise a sub-1px-per-frame increment never accumulates,
-        // since each frame re-adds 0.45 to a value that keeps
-        // truncating back down to the same whole pixel.
+        // otherwise a sub-1px increment never accumulates, since each
+        // frame re-adds a fraction to a value that keeps truncating
+        // back down to the same whole pixel.
         var pos = el.scrollLeft;
-        var paused = false, resumeTimer;
+        var paused = false, resumeTimer, lastT = null;
         function pauseNow() { paused = true; clearTimeout(resumeTimer); }
         function scheduleResume() {
           clearTimeout(resumeTimer);
@@ -174,15 +204,18 @@
         el.addEventListener("pointercancel", scheduleResume);
         el.addEventListener("mouseenter", pauseNow);
         el.addEventListener("mouseleave", scheduleResume);
-        (function tick() {
-          if (!paused) {
-            pos += row.dir * PX_PER_FRAME;
+        function tick(t) {
+          if (lastT != null && !paused) {
+            var dt = Math.min(t - lastT, 100); // clamp so a tab switch can't jump the scroll
+            pos += row.dir * PX_PER_SEC * (dt / 1000);
             if (pos >= half) pos -= half;
             else if (pos <= 0) pos += half;
             el.scrollLeft = pos;
           }
+          lastT = t;
           requestAnimationFrame(tick);
-        })();
+        }
+        requestAnimationFrame(tick);
       });
     }
 
@@ -213,11 +246,6 @@
       updateLightbox();
     }
 
-    marqueeEl.addEventListener("click", function (e) {
-      var t = e.target.closest(".gtile");
-      if (!t || t.classList.contains("is-empty")) return;
-      openLightbox(parseInt(t.dataset.idx, 10));
-    });
     $("#lightboxClose").addEventListener("click", closeLightbox);
     $("#lightboxPrev").addEventListener("click", function () { step(-1); });
     $("#lightboxNext").addEventListener("click", function () { step(1); });
@@ -228,6 +256,35 @@
       else if (e.key === "ArrowLeft") step(-1);
       else if (e.key === "ArrowRight") step(1);
     });
+  })();
+
+  /* ---------------------------------------------------------
+     PARALLAX BACKGROUND
+     The soft venue photo behind the couple/events sections drifts a
+     little slower than the page scroll, via a CSS custom property
+     the pseudo-element's transform reads -- cheap (one style write
+     per rAF-throttled scroll tick) and works on mobile Safari, unlike
+     background-attachment:fixed which mobile browsers largely ignore.
+     --------------------------------------------------------- */
+  (function parallax() {
+    var els = $$(".sec--couple, .sec--events");
+    if (!els.length) return;
+    if (window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    var ticking = false;
+    function update() {
+      var vh = window.innerHeight;
+      els.forEach(function (el) {
+        var r = el.getBoundingClientRect();
+        var center = r.top + r.height / 2;
+        var shift = (center - vh / 2) * 0.08; // 8% of the section's distance from screen-center
+        el.style.setProperty("--bg-shift", shift.toFixed(1) + "px");
+      });
+      ticking = false;
+    }
+    window.addEventListener("scroll", function () {
+      if (!ticking) { requestAnimationFrame(update); ticking = true; }
+    }, { passive: true });
+    update();
   })();
 
   $("#closingText").textContent    = C.closing.text;
@@ -636,6 +693,7 @@
   var audio = $("#audio"), musicBtn = $("#musicBtn"), musicReady = false;
   if (C.music && C.music.src) {
     audio.src = C.music.src;
+    audio.volume = .5; // capped so it never starts jarringly loud, even on manual play
     audio.addEventListener("canplay", function () { musicReady = true; });
     audio.addEventListener("error", function () { musicBtn.hidden = true; });
     musicBtn.addEventListener("click", function () {
@@ -668,10 +726,10 @@
         audio.play().then(function () {
           musicBtn.classList.add("is-playing");
           var v = 0, fade = setInterval(function () {          // gentle fade-in
-            v = Math.min(.55, v + .03); audio.volume = v;
-            if (v >= .55) clearInterval(fade);
+            v = Math.min(.5, v + .03); audio.volume = v;
+            if (v >= .5) clearInterval(fade);
           }, 90);
-        }).catch(function () { audio.volume = .55; });
+        }).catch(function () { audio.volume = .5; });
       }
     }
     loadWishes();

@@ -109,8 +109,6 @@
   <section class="sec sec--gallery" id="sec-gallery">
     <div class="wrap">
       <header class="sec__head reveal">
-        <p class="eyebrow">Gallery</p>
-        <h2 class="sec__title" id="galleryTitle"></h2>
         <img class="divider" src="assets/img/divider.png" alt="">
       </header>
     </div>
@@ -240,6 +238,18 @@
     </div>
   </section>
 
+  <!-- GALLERY (landscape) -->
+  <section class="sec sec--gallery" id="sec-gallery-ls">
+    <div class="wrap">
+      <header class="sec__head reveal">
+        <img class="divider" src="assets/img/divider.png" alt="">
+      </header>
+    </div>
+    <div class="gallery-marquee reveal" id="galleryGridLS">
+      <div class="gallery-row"><div class="gallery-track" id="galleryRowLS"></div></div>
+    </div>
+  </section>
+
   <!-- CLOSING -->
   <section class="sec sec--closing" id="sec-closing">
     <svg class="orn orn--tl orn--light" aria-hidden="true"><use href="#i-leafcorner"/></svg>
@@ -264,7 +274,7 @@
   <svg class="music__ico" aria-hidden="true"><use href="#i-note"/></svg>
   <span class="music__ring" aria-hidden="true"></span>
 </button>
-<audio id="audio" loop preload="none"></audio>
+<audio id="audio" loop preload="auto"></audio>
 
 <!-- PREWEDDING LIGHTBOX -->
 <div class="lightbox" id="lightbox" aria-hidden="true">

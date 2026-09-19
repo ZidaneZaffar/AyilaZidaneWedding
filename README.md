@@ -135,8 +135,8 @@ The guest's name then appears under *"Kepada Yth."* on the cover and pre-fills t
 | Add/change the gift registry link | `config.js ▸ gift.registry.url` — leave it `""` to hide that card entirely |
 | Add photos | drop `bride.jpg` / `groom.jpg` into `assets/img/` — full-size camera photos are fine, see "Uploading full-size photos" below |
 | Add the cover photo | drop `cover.jpg` into `assets/img/` — leave `config.js ▸ cover.photo` empty to use a plain gradient instead. The current photo already has the title/names/date/honorific designed into it, so the site only overlays a personalised guest name (from `?to=`) and the "Buka Undangan" button on top — a photo without that text baked in would need those brought back into the HTML/CSS |
-| Add prewedding photos | drop `tenis-1.jpg`…`museum-4.jpg` into `assets/img/gallery/` — see `assets/img/gallery/README.md`. Missing files just show a placeholder tile |
-| Add/remove a prewedding concept or photo | `config.js ▸ gallery.concepts` — the tabs and grid update automatically |
+| Add prewedding photos | drop portrait shots (`tenis-1.jpg`…) or landscape shots (`tenis-1-ls.jpg`…) into `assets/img/gallery/` — see `assets/img/gallery/README.md`. Missing files just show a placeholder tile |
+| Add/remove a prewedding concept or photo | `config.js ▸ gallery.concepts[].photos` (portrait rows) / `.landscape` (bottom row) — each list can be any length, they don't need to match each other or between concepts; the rows update automatically |
 | Add music | drop `song.mp3` into `assets/audio/` (under 4 MB). Set `music.src = ""` to hide the button |
 | Change the max guest count | `config.js ▸ rsvp.maxGuests` |
 | Cap a specific guest's pax to less than the site-wide max | give them `, <pax>` in `tools/link-generator.html`'s name list — see § 5 |
@@ -179,8 +179,8 @@ After any edit: `git add -A && git commit -m "update" && git push` — Pages red
 - [x] Separate "Save the Date" buttons for Akad and Resepsi
 - [x] All couple/family/venue data isolated in `config.js`
 - [x] Gift section — "Wanna give us some gifts?" with bank account, gift registry link, and delivery address, one-tap copy
-- [x] Prewedding gallery — 3 concepts (tenis, taman, museum) with tabs, lightbox and graceful placeholders for missing photos
-- [x] Sections: cover · couple · prewedding gallery · countdown · events · maps · RSVP · wishes · gift · closing
+- [x] Prewedding gallery — 3 concepts (tenis, taman, museum), auto-scrolling portrait + landscape rows, lightbox and graceful placeholders for missing photos
+- [x] Sections: cover · couple · prewedding gallery · countdown · events · maps · RSVP · wishes · gift · prewedding gallery (landscape) · closing
 - [x] Elegant, modern, premium, mobile-first, responsive, smooth scrolling
 - [x] Fade-in scroll animations, floating music button, safe-area insets for iPhone
 - [x] Deployed via GitHub Pages, no build step, ~40 KB total

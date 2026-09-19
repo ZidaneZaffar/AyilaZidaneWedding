@@ -206,9 +206,10 @@ body::after{
 /* ---------- COUPLE ---------- */
 .sec--couple{background:var(--ivory); text-align:center; overflow:hidden}
 .sec--couple::before{
-  content:""; position:absolute; inset:0; z-index:0;
+  content:""; position:absolute; left:0; right:0; top:-40px; bottom:-40px; z-index:0;
   background:url("assets/img/bg-venue.jpg") center/cover no-repeat;
   opacity:.22; pointer-events:none;
+  transform:translateY(var(--bg-shift, 0px)); will-change:transform;
 }
 .sec--couple .wrap{position:relative; z-index:1}
 .person{margin:0 auto; max-width:400px}
@@ -278,9 +279,12 @@ body::after{
 .gtile__ph em{display:block; font-style:normal; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
 .gtile.is-empty{cursor:default}
 
+.gtile--ls{width:210px; aspect-ratio:3/2}
+
 @media (min-width:700px){
   .gallery-track{gap:16px; padding:0 6px}
   .gtile{width:190px}
+  .gtile--ls{width:320px}
 }
 
 /* ---------- LIGHTBOX ---------- */
@@ -342,9 +346,10 @@ body::after{
 /* ---------- EVENTS ---------- */
 .sec--events{background:linear-gradient(180deg,var(--ivory),var(--ivory-2)); overflow:hidden}
 .sec--events::before{
-  content:""; position:absolute; inset:0; z-index:0;
+  content:""; position:absolute; left:0; right:0; top:-40px; bottom:-40px; z-index:0;
   background:url("assets/img/bg-venue.jpg") center/cover no-repeat;
   opacity:.22; pointer-events:none;
+  transform:translateY(var(--bg-shift, 0px)); will-change:transform;
 }
 .sec--events .wrap{position:relative; z-index:1}
 .events{display:grid; gap:16px}
