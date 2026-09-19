@@ -123,7 +123,6 @@
     function fillRow(trackEl, idxList) {
       var html = idxList.map(function (i) { return tileHTML(photos[i], i); }).join("");
       trackEl.innerHTML = reduceMotion ? html : html + html; // duplicate for seamless loop
-      if (reduceMotion) trackEl.parentElement.classList.add("is-manual");
     }
 
     var idxA = [], idxB = [];
@@ -138,13 +137,45 @@
       img.src = img.dataset.src;
     });
 
+    // Auto-scroll is driven from JS (not a CSS animation) so the row
+    // stays a genuine native-scroll container the guest can grab and
+    // drag/swipe at any time — dragging just pauses the auto-advance
+    // for a moment rather than fighting it.
     if (!reduceMotion) {
-      // Speed is constant px/sec regardless of photo count, so the
-      // motion always reads as slow and "halus" (smooth), not rushed.
-      var PX_PER_SEC = 26;
-      [row1, row2].forEach(function (track) {
-        var setWidth = track.scrollWidth / 2;
-        track.style.animationDuration = (setWidth / PX_PER_SEC) + "s";
+      [{ track: row1, dir: 1 }, { track: row2, dir: -1 }].forEach(function (row) {
+        var el = row.track.parentElement; // the scrollable .gallery-row
+        var half = row.track.scrollWidth / 2;
+        if (!half) return;
+        var PX_PER_FRAME = 0.45; // ~27px/s at 60fps — slow and "halus"
+        // Position is tracked as our own float, not read back from
+        // el.scrollLeft (which the browser stores as an integer) —
+        // otherwise a sub-1px-per-frame increment never accumulates,
+        // since each frame re-adds 0.45 to a value that keeps
+        // truncating back down to the same whole pixel.
+        var pos = el.scrollLeft;
+        var paused = false, resumeTimer;
+        function pauseNow() { paused = true; clearTimeout(resumeTimer); }
+        function scheduleResume() {
+          clearTimeout(resumeTimer);
+          resumeTimer = setTimeout(function () {
+            pos = el.scrollLeft; // pick up from wherever the guest dragged it
+            paused = false;
+          }, 700);
+        }
+        el.addEventListener("pointerdown", pauseNow);
+        el.addEventListener("pointerup", scheduleResume);
+        el.addEventListener("pointercancel", scheduleResume);
+        el.addEventListener("mouseenter", pauseNow);
+        el.addEventListener("mouseleave", scheduleResume);
+        (function tick() {
+          if (!paused) {
+            pos += row.dir * PX_PER_FRAME;
+            if (pos >= half) pos -= half;
+            else if (pos <= 0) pos += half;
+            el.scrollLeft = pos;
+          }
+          requestAnimationFrame(tick);
+        })();
       });
     }
 
