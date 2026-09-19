@@ -171,11 +171,7 @@ window.WEDDING_CONFIG = {
     pollInterval:  30000
   },
 
-  /* ---------- 10. QUOTE & CLOSING ---------- */
-  quote: {
-    text: "Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan hidup dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya di antaramu rasa kasih dan sayang.",
-    source: "QS. Ar-Rum : 21"
-  },
+  /* ---------- 10. CLOSING ---------- */
   closing: {
     text: "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu kepada kedua mempelai.",
     signOff: "Kami yang berbahagia,"
