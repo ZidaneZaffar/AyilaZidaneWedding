@@ -73,7 +73,10 @@
       var img = $("[data-photo]", root);
       img.onload  = function () { img.hidden = false; $("[data-mono]", root).style.display = "none"; };
       img.onerror = function () { img.remove(); };
-      img.loading = "lazy";
+      // No loading="lazy" here: the element starts `hidden` (display:none)
+      // until it loads, and a display:none element never gets close enough
+      // to the viewport for the browser's lazy-load heuristic to fire --
+      // the fetch simply never starts and the monogram fallback sticks forever.
       img.decoding = "async";
       img.src = p.photo;
       img.alt = p.fullName;
