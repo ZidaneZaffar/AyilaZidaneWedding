@@ -208,7 +208,7 @@ body::after{
 .sec--couple::before{
   content:""; position:absolute; inset:0; z-index:0;
   background:url("assets/img/bg-venue.jpg") center/cover no-repeat;
-  opacity:.12; pointer-events:none;
+  opacity:.22; pointer-events:none;
 }
 .sec--couple .wrap{position:relative; z-index:1}
 .person{margin:0 auto; max-width:400px}
@@ -344,7 +344,7 @@ body::after{
 .sec--events::before{
   content:""; position:absolute; inset:0; z-index:0;
   background:url("assets/img/bg-venue.jpg") center/cover no-repeat;
-  opacity:.12; pointer-events:none;
+  opacity:.22; pointer-events:none;
 }
 .sec--events .wrap{position:relative; z-index:1}
 .events{display:grid; gap:16px}
