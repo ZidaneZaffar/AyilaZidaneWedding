@@ -427,24 +427,47 @@
      --------------------------------------------------------- */
   var form = $("#rsvpForm"), submitBtn = $("#submitBtn"), statusEl = $("#formStatus");
   var guestsField = $("#guestsField"), guestsInput = $("#fGuests");
-  guestsInput.max = C.rsvp.maxGuests;
+
+  // A personalised link can cap the guest count below the site-wide
+  // max — e.g. ?to=Budi%20Santoso&pax=2 lets that guest pick 1 or 2,
+  // while a guest invited with pax=1 can only ever pick 1.
+  var invitedPax = parseInt(params.get("pax"), 10);
+  var guestsMax = (invitedPax >= 1) ? Math.min(invitedPax, C.rsvp.maxGuests) : C.rsvp.maxGuests;
+  guestsInput.max = guestsMax;
+  if (invitedPax >= 1) {
+    $("#guestsHint").textContent = guestsMax === 1
+      ? "Undangan ini untuk 1 orang."
+      : "Undangan ini untuk maksimal " + guestsMax + " orang (termasuk Anda sendiri).";
+  }
 
   $("#fMessage").addEventListener("input", function () {
     $("#charCount").textContent = this.value.length;
   });
 
-  $$(".stepper__btn").forEach(function (b) {
+  var stepperBtns = $$(".stepper__btn");
+  function syncStepperBtns() {
+    var v = parseInt(guestsInput.value, 10);
+    stepperBtns.forEach(function (b) {
+      var step = parseInt(b.dataset.step, 10);
+      b.disabled = (step < 0 && v <= 1) || (step > 0 && v >= guestsMax);
+    });
+  }
+
+  stepperBtns.forEach(function (b) {
     b.addEventListener("click", function () {
       var v = parseInt(guestsInput.value, 10) + parseInt(b.dataset.step, 10);
-      guestsInput.value = Math.min(C.rsvp.maxGuests, Math.max(1, v));
+      guestsInput.value = Math.min(guestsMax, Math.max(1, v));
+      syncStepperBtns();
     });
   });
+  syncStepperBtns();
 
   $$('input[name="attendance"]').forEach(function (r) {
     r.addEventListener("change", function () {
       var going = r.value === "Hadir";
       guestsField.classList.toggle("is-hidden", !going);
       if (!going) guestsInput.value = 0; else if (+guestsInput.value < 1) guestsInput.value = 1;
+      syncStepperBtns();
     });
   });
 
