@@ -95,7 +95,8 @@ function handleSubmit(p) {
   if (guests > 20) guests = 20;
 
   var lock = LockService.getScriptLock();
-  lock.waitLock(20000);                       // keeps concurrent submits from colliding
+  lock.waitLock(10000);                       // keeps concurrent submits from colliding —
+                                               // must stay well under the client's JSONP timeout
   try {
     var sheet = getSheet();
     sheet.appendRow([new Date(), name, att, guests, message, "Website"]);
