@@ -152,6 +152,10 @@ window.WEDDING_CONFIG = {
       // Add a second account by copying the block above:
       // , { bank: "MANDIRI", number: "0000000000", holder: "Ayila Adzkiya Sucahyo", logo: "" }
     ],
+    // Optional — leave image: "" to hide this card entirely.
+    qris: {
+      image: "assets/img/qris.jpg"
+    },
     // Optional — leave url: "" to hide this card entirely.
     registry: {
       text: "Atau pilih hadiah dari wishlist kami",

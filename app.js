@@ -321,6 +321,13 @@
     '</div>';
   }).join("");
 
+  if (C.gift.qris && C.gift.qris.image) {
+    $("#giftQris").innerHTML = '' +
+      '<img class="gift-qris__img" src="' + esc(C.gift.qris.image) + '" alt="Kode QRIS">' +
+      '<p class="gift-qris__label">Scan untuk bayar dengan QRIS</p>';
+    $("#giftQris").hidden = false;
+  }
+
   if (C.gift.registry && C.gift.registry.url) {
     var reg = C.gift.registry;
     $("#giftRegistry").innerHTML = '' +
