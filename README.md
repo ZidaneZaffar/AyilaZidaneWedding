@@ -15,6 +15,7 @@ A mobile-first, single-page wedding invitation with live RSVP, a real-time wishe
 ├── config.js        ← EDIT THIS  all names, dates, addresses, bank details
 ├── apps-script/Code.gs           the Google Apps Script backend
 ├── tools/link-generator.html     make personalised links per guest
+├── tools/optimize-images.py      shrink oversized photos before they ship
 ├── assets/img/                   photos (cover.jpg, groom.jpg, bride.jpg, og-cover.jpg)
 ├── assets/img/gallery/           prewedding photos (tenis/taman/museum)
 ├── assets/audio/                 song.mp3
@@ -95,7 +96,18 @@ Live at `https://USERNAME.github.io/wedding-ayila-zidane/` within ~60 seconds.
 
 ---
 
-## 4 · Personalised guest links
+## 4 · Uploading full-size photos
+
+Drop full-resolution camera photos straight into `assets/img/` or `assets/img/gallery/` — you don't need to resize or compress anything by hand:
+
+- **The live site is always optimized automatically.** `deploy.yml` runs `tools/optimize-images.py` on every deploy, which resizes and recompresses every photo (long edge capped at 2000px for `assets/img/`, 1600px for the gallery, since those only ever show as small tiles or in a ~560px lightbox) before it's published. The originals you committed are untouched in the repo — only the deployed copy is shrunk.
+- **Run it locally too if you want the committed file itself smaller** (faster clones, smaller diffs): `pip install pillow && python3 tools/optimize-images.py`.
+
+This is what took the gallery from ~65MB of raw photos down to ~2MB served to guests, with no visible quality loss at the sizes they're actually displayed.
+
+---
+
+## 5 · Personalised guest links
 
 Open `tools/link-generator.html` in a browser, paste your invitation URL and a list of names, and it produces one link per guest:
 
@@ -109,7 +121,7 @@ The guest's name then appears under *"Kepada Yth."* on the cover and pre-fills t
 
 ---
 
-## 5 · Maintenance cheatsheet
+## 6 · Maintenance cheatsheet
 
 | I want to… | Do this |
 |---|---|
@@ -121,13 +133,13 @@ The guest's name then appears under *"Kepada Yth."* on the cover and pre-fills t
 | Add a second bank account | copy the commented-out block in `gift.accounts` |
 | Add/change the QRIS code | drop the image into `assets/img/qris.jpg` and update `config.js ▸ gift.qris.image` — leave it `""` to hide that card entirely |
 | Add/change the gift registry link | `config.js ▸ gift.registry.url` — leave it `""` to hide that card entirely |
-| Add photos | drop `bride.jpg` / `groom.jpg` into `assets/img/` (portrait, ~800×1000, under 300 KB) |
-| Add the cover photo | drop `cover.jpg` into `assets/img/` (portrait, phone-shaped, under 500 KB) — leave `config.js ▸ cover.photo` empty to use a plain gradient instead. The current photo already has the title/names/date/honorific designed into it, so the site only overlays a personalised guest name (from `?to=`) and the "Buka Undangan" button on top — a photo without that text baked in would need those brought back into the HTML/CSS |
+| Add photos | drop `bride.jpg` / `groom.jpg` into `assets/img/` — full-size camera photos are fine, see "Uploading full-size photos" below |
+| Add the cover photo | drop `cover.jpg` into `assets/img/` — leave `config.js ▸ cover.photo` empty to use a plain gradient instead. The current photo already has the title/names/date/honorific designed into it, so the site only overlays a personalised guest name (from `?to=`) and the "Buka Undangan" button on top — a photo without that text baked in would need those brought back into the HTML/CSS |
 | Add prewedding photos | drop `tenis-1.jpg`…`museum-4.jpg` into `assets/img/gallery/` — see `assets/img/gallery/README.md`. Missing files just show a placeholder tile |
 | Add/remove a prewedding concept or photo | `config.js ▸ gallery.concepts` — the tabs and grid update automatically |
 | Add music | drop `song.mp3` into `assets/audio/` (under 4 MB). Set `music.src = ""` to hide the button |
 | Change the max guest count | `config.js ▸ rsvp.maxGuests` |
-| Cap a specific guest's pax to less than the site-wide max | give them `, <pax>` in `tools/link-generator.html`'s name list — see § 4 |
+| Cap a specific guest's pax to less than the site-wide max | give them `, <pax>` in `tools/link-generator.html`'s name list — see § 5 |
 | Hide wishes from non-attendees | `Code.gs ▸ HIDE_NON_ATTENDING_WISHES = true`, then re-deploy |
 | Delete a rude message | delete the row in the Google Sheet — it disappears from the site within 30 s |
 | Get an email per RSVP | in Apps Script: **Triggers ▸ Add trigger ▸ `onFormSubmitNotify` ▸ From spreadsheet ▸ On change** |
@@ -139,7 +151,7 @@ After any edit: `git add -A && git commit -m "update" && git push` — Pages red
 
 ---
 
-## 6 · Troubleshooting
+## 7 · Troubleshooting
 
 | Symptom | Fix |
 |---|---|
@@ -153,7 +165,7 @@ After any edit: `git add -A && git commit -m "update" && git push` — Pages red
 
 ---
 
-## 7 · Requirements checklist
+## 8 · Requirements checklist
 
 - [x] RSVP form: full name, attendance, number of guests, wishes
 - [x] Every submission appends a new row to Google Sheets in real time

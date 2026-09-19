@@ -23,6 +23,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+      - name: Optimize images
+        run: |
+          pip install --quiet pillow
+          python3 tools/optimize-images.py
       - uses: actions/upload-pages-artifact@v3
         with:
           path: .
