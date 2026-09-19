@@ -46,6 +46,8 @@
     coverImg.onload  = function () { coverImg.classList.add("is-ready"); };
     coverImg.onerror = function () { coverImg.remove(); };
     coverImg.alt = C.couple.displayTitle.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&");
+    coverImg.decoding = "async";
+    coverImg.fetchPriority = "high"; // it's the LCP element, so skip the browser's default lazy heuristics
     coverImg.src = C.cover.photo;
   }
 
@@ -71,6 +73,8 @@
       var img = $("[data-photo]", root);
       img.onload  = function () { img.hidden = false; $("[data-mono]", root).style.display = "none"; };
       img.onerror = function () { img.remove(); };
+      img.loading = "lazy";
+      img.decoding = "async";
       img.src = p.photo;
       img.alt = p.fullName;
     } else {
@@ -131,6 +135,7 @@
 
     $$(".gtile img", marqueeEl).forEach(function (img) {
       img.loading = "lazy";
+      img.decoding = "async";
       img.onload  = function () { img.closest(".gtile").classList.add("is-ready"); };
       img.onerror = function () { img.closest(".gtile").classList.add("is-empty"); img.remove(); };
       img.src = img.dataset.src;
