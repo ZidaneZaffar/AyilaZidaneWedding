@@ -42,21 +42,22 @@ window.WEDDING_CONFIG = {
   /* ---------- 3. GALLERY ----------
      All photos are shown together in one scrolling grid (no tabs) —
      `concepts` here is just how the photos are grouped/organized by
-     shoot. Drop files into assets/img/gallery/ using the paths below —
-     any photo you don't have yet just shows a "Segera Hadir"
-     placeholder until the file exists.                            */
+     shoot. Drop files into assets/img/gallery/ using the paths below.
+     The photo count is dynamic: the site probes each path at load
+     and silently drops any that aren't there yet -- no placeholder
+     tile, no reserved empty slot. Add the config line whenever you
+     actually upload the file.                                    */
   gallery: {
-    /* `photos` (portrait, top two rows) and `landscape` (bottom row)
-       are independent lists -- each can hold any number of files,
-       they don't need to match each other or match between concepts.
-       Tenis can have 3 landscape shots while museum has 5; just add
-       or remove lines below. Any file listed here that hasn't been
-       uploaded yet just shows a "Segera Hadir" placeholder tile.   */
+    /* `photos` (portrait, top two rows) and `landscape` (own section
+       further down, after the gift section) are independent lists --
+       each can hold any number of files, and they don't need to
+       match each other or match between concepts. Tenis can have 3
+       landscape shots while museum has 5; just add or remove lines
+       below.                                                      */
     concepts: [
       {
         key:   "tenis",
         label: "Tenis",
-        icon:  "tennis",
         photos: [
           "assets/img/gallery/tenis-1.jpg",
           "assets/img/gallery/tenis-2.jpg",
@@ -72,7 +73,6 @@ window.WEDDING_CONFIG = {
       {
         key:   "taman",
         label: "Taman",
-        icon:  "tree",
         photos: [
           "assets/img/gallery/taman-1.jpg",
           "assets/img/gallery/taman-2.jpg",
@@ -89,7 +89,6 @@ window.WEDDING_CONFIG = {
       {
         key:   "museum",
         label: "Museum",
-        icon:  "museum",
         photos: [
           "assets/img/gallery/museum-1.jpg",
           "assets/img/gallery/museum-2.jpg",

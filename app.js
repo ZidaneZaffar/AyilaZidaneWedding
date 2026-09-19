@@ -103,158 +103,180 @@
     var G = C.gallery;
     if (!G || !Array.isArray(G.concepts) || !G.concepts.length) {
       var sec = $("#sec-gallery"); if (sec) sec.remove();
+      var secLS0 = $("#sec-gallery-ls"); if (secLS0) secLS0.remove();
       return;
     }
 
     var galleryGrid = $("#galleryGrid"), galleryGridLS = $("#galleryGridLS");
     var row1 = $("#galleryRow1"), row2 = $("#galleryRow2"), rowLS = $("#galleryRowLS");
 
-    // Portrait and landscape photos are flattened into ONE array (shared
-    // by the lightbox, so prev/next crosses both rows) but tracked into
-    // separate row index-lists, since landscape tiles use a different
-    // aspect ratio and can't share a row with portrait ones. Each
-    // concept's `photos`/`landscape` list can be any length -- nothing
-    // here assumes they match each other or match between concepts.
-    var photos = [];
-    var idxA = [], idxB = [], idxLS = [];
+    // The photo count is dynamic, not a fixed layout of slots: a path
+    // listed in config.js that hasn't been uploaded yet is dropped
+    // entirely rather than reserved as an empty/placeholder tile, so
+    // every concept can grow or shrink independently with no gaps.
+    // That means we can't build the rows straight from config -- we
+    // have to probe each URL first and keep only the ones that load.
+    var allEntries = [];
     G.concepts.forEach(function (c) {
       (c.photos || []).forEach(function (src, i) {
-        var gi = photos.length;
-        photos.push({ src: src, icon: c.icon, label: c.label, n: i + 1, ls: false });
-        (gi % 2 === 0 ? idxA : idxB).push(gi);
+        allEntries.push({ src: src, label: c.label, n: i + 1, ls: false });
       });
     });
     G.concepts.forEach(function (c) {
       (c.landscape || []).forEach(function (src, i) {
-        var gi = photos.length;
-        photos.push({ src: src, icon: c.icon, label: c.label, n: i + 1, ls: true });
-        idxLS.push(gi);
+        allEntries.push({ src: src, label: c.label, n: i + 1, ls: true });
       });
     });
+
+    function probe(entry) {
+      return new Promise(function (resolve) {
+        var img = new Image();
+        img.onload = function () { resolve(entry); };
+        img.onerror = function () { resolve(null); };
+        img.src = entry.src;
+      });
+    }
 
     var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    function tileHTML(p, i) {
-      return '' +
-      '<button type="button" class="gtile' + (p.ls ? " gtile--ls" : "") + '" data-idx="' + i + '" aria-label="Lihat foto ' + (i + 1) + ' — ' + esc(p.label) + '">' +
-        '<img data-src="' + esc(p.src) + '" alt="' + esc(p.label) + ' ' + p.n + '">' +
-        '<span class="gtile__ph"><svg aria-hidden="true"><use href="#i-' + esc(p.icon) + '"/></svg><em>Segera Hadir</em></span>' +
-      '</button>';
-    }
-
-    function fillRow(trackEl, idxList) {
-      var html = idxList.map(function (i) { return tileHTML(photos[i], i); }).join("");
-      trackEl.innerHTML = reduceMotion ? html : html + html; // duplicate for seamless loop
-    }
-
-    fillRow(row1, idxA);
-    fillRow(row2, idxB);
-    if (idxLS.length) fillRow(rowLS, idxLS);
-    else { var secLS = $("#sec-gallery-ls"); if (secLS) secLS.remove(); galleryGridLS = null; }
-
-    [galleryGrid, galleryGridLS].forEach(function (marqueeEl) {
-      if (!marqueeEl) return;
-      $$(".gtile img", marqueeEl).forEach(function (img) {
-        img.loading = "lazy";
-        img.decoding = "async";
-        img.onload  = function () { img.closest(".gtile").classList.add("is-ready"); };
-        img.onerror = function () { img.closest(".gtile").classList.add("is-empty"); img.remove(); };
-        img.src = img.dataset.src;
+    Promise.all(allEntries.map(probe)).then(function (results) {
+      // Portrait and landscape photos are flattened into ONE array
+      // (shared by the lightbox, so prev/next crosses both rows) but
+      // tracked into separate row index-lists, since landscape tiles
+      // use a different aspect ratio and can't share a row with
+      // portrait ones.
+      var photos = [];
+      var idxA = [], idxB = [], idxLS = [];
+      results.forEach(function (p) {
+        if (!p) return; // failed to load -- skip, no placeholder
+        var gi = photos.length;
+        photos.push(p);
+        if (p.ls) idxLS.push(gi);
+        else (idxA.length <= idxB.length ? idxA : idxB).push(gi);
       });
-      marqueeEl.addEventListener("click", function (e) {
-        var t = e.target.closest(".gtile");
-        if (!t || t.classList.contains("is-empty")) return;
-        openLightbox(parseInt(t.dataset.idx, 10));
-      });
-    });
 
-    // Auto-scroll is driven from JS (not a CSS animation) so the row
-    // stays a genuine native-scroll container the guest can grab and
-    // drag/swipe at any time — dragging just pauses the auto-advance
-    // for a moment rather than fighting it. Speed is tracked in
-    // px/second and stepped by the real frame delta (not a fixed
-    // per-frame amount) so it moves at the same visual speed on a
-    // 60Hz and a 120Hz screen alike, instead of the 120Hz one looking
-    // twice as fast/jittery.
-    if (!reduceMotion) {
-      var rows = [{ track: row1, dir: 1 }, { track: row2, dir: -1 }];
-      if (idxLS.length) rows.push({ track: rowLS, dir: 1 });
-      rows.forEach(function (row) {
-        var el = row.track.parentElement; // the scrollable .gallery-row
-        var half = row.track.scrollWidth / 2;
-        if (!half) return;
-        var PX_PER_SEC = 27; // slow and "halus"
-        // Position is tracked as our own float, not read back from
-        // el.scrollLeft (which the browser stores as an integer) —
-        // otherwise a sub-1px increment never accumulates, since each
-        // frame re-adds a fraction to a value that keeps truncating
-        // back down to the same whole pixel.
-        var pos = el.scrollLeft;
-        var paused = false, resumeTimer, lastT = null;
-        function pauseNow() { paused = true; clearTimeout(resumeTimer); }
-        function scheduleResume() {
-          clearTimeout(resumeTimer);
-          resumeTimer = setTimeout(function () {
-            pos = el.scrollLeft; // pick up from wherever the guest dragged it
-            paused = false;
-          }, 700);
-        }
-        el.addEventListener("pointerdown", pauseNow);
-        el.addEventListener("pointerup", scheduleResume);
-        el.addEventListener("pointercancel", scheduleResume);
-        el.addEventListener("mouseenter", pauseNow);
-        el.addEventListener("mouseleave", scheduleResume);
-        function tick(t) {
-          if (lastT != null && !paused) {
-            var dt = Math.min(t - lastT, 100); // clamp so a tab switch can't jump the scroll
-            pos += row.dir * PX_PER_SEC * (dt / 1000);
-            if (pos >= half) pos -= half;
-            else if (pos <= 0) pos += half;
-            el.scrollLeft = pos;
+      if (!idxA.length && !idxB.length) { var sec1 = $("#sec-gallery"); if (sec1) sec1.remove(); galleryGrid = null; }
+      if (!idxLS.length) { var secLS = $("#sec-gallery-ls"); if (secLS) secLS.remove(); galleryGridLS = null; }
+      if (!photos.length) return;
+
+      function tileHTML(p, i) {
+        return '' +
+        '<button type="button" class="gtile' + (p.ls ? " gtile--ls" : "") + '" data-idx="' + i + '" aria-label="Lihat foto ' + (i + 1) + ' — ' + esc(p.label) + '">' +
+          '<img src="' + esc(p.src) + '" alt="' + esc(p.label) + ' ' + p.n + '">' +
+        '</button>';
+      }
+
+      function fillRow(trackEl, idxList) {
+        var html = idxList.map(function (i) { return tileHTML(photos[i], i); }).join("");
+        trackEl.innerHTML = reduceMotion ? html : html + html; // duplicate for seamless loop
+      }
+
+      if (galleryGrid) { fillRow(row1, idxA); fillRow(row2, idxB); }
+      if (galleryGridLS) fillRow(rowLS, idxLS);
+
+      [galleryGrid, galleryGridLS].forEach(function (marqueeEl) {
+        if (!marqueeEl) return;
+        $$(".gtile img", marqueeEl).forEach(function (img) {
+          img.decoding = "async";
+          img.onload = function () { img.closest(".gtile").classList.add("is-ready"); };
+          if (img.complete) img.closest(".gtile").classList.add("is-ready"); // already cached from the probe
+        });
+        marqueeEl.addEventListener("click", function (e) {
+          var t = e.target.closest(".gtile");
+          if (!t) return;
+          openLightbox(parseInt(t.dataset.idx, 10));
+        });
+      });
+
+      // Auto-scroll is driven from JS (not a CSS animation) so the row
+      // stays a genuine native-scroll container the guest can grab and
+      // drag/swipe at any time — dragging just pauses the auto-advance
+      // for a moment rather than fighting it. Speed is tracked in
+      // px/second and stepped by the real frame delta (not a fixed
+      // per-frame amount) so it moves at the same visual speed on a
+      // 60Hz and a 120Hz screen alike, instead of the 120Hz one looking
+      // twice as fast/jittery.
+      if (!reduceMotion) {
+        var rows = [];
+        if (galleryGrid) { rows.push({ track: row1, dir: 1 }, { track: row2, dir: -1 }); }
+        if (galleryGridLS) rows.push({ track: rowLS, dir: 1 });
+        rows.forEach(function (row) {
+          var el = row.track.parentElement; // the scrollable .gallery-row
+          var half = row.track.scrollWidth / 2;
+          if (!half) return;
+          var PX_PER_SEC = 27; // slow and "halus"
+          // Position is tracked as our own float, not read back from
+          // el.scrollLeft (which the browser stores as an integer) —
+          // otherwise a sub-1px increment never accumulates, since each
+          // frame re-adds a fraction to a value that keeps truncating
+          // back down to the same whole pixel.
+          var pos = el.scrollLeft;
+          var paused = false, resumeTimer, lastT = null;
+          function pauseNow() { paused = true; clearTimeout(resumeTimer); }
+          function scheduleResume() {
+            clearTimeout(resumeTimer);
+            resumeTimer = setTimeout(function () {
+              pos = el.scrollLeft; // pick up from wherever the guest dragged it
+              paused = false;
+            }, 700);
           }
-          lastT = t;
+          el.addEventListener("pointerdown", pauseNow);
+          el.addEventListener("pointerup", scheduleResume);
+          el.addEventListener("pointercancel", scheduleResume);
+          el.addEventListener("mouseenter", pauseNow);
+          el.addEventListener("mouseleave", scheduleResume);
+          function tick(t) {
+            if (lastT != null && !paused) {
+              var dt = Math.min(t - lastT, 100); // clamp so a tab switch can't jump the scroll
+              pos += row.dir * PX_PER_SEC * (dt / 1000);
+              if (pos >= half) pos -= half;
+              else if (pos <= 0) pos += half;
+              el.scrollLeft = pos;
+            }
+            lastT = t;
+            requestAnimationFrame(tick);
+          }
           requestAnimationFrame(tick);
-        }
-        requestAnimationFrame(tick);
+        });
+      }
+
+      // ---- Lightbox ----
+      var lb = $("#lightbox"), lbImg = $("#lightboxImg"), lbCap = $("#lightboxCaption");
+      var lbIdx = 0;
+
+      function updateLightbox() {
+        var p = photos[lbIdx];
+        lbImg.src = p.src;
+        lbImg.alt = p.label + " " + p.n;
+        lbCap.textContent = p.label + " · " + (lbIdx + 1) + " / " + photos.length;
+      }
+      function openLightbox(i) {
+        lbIdx = i;
+        updateLightbox();
+        lb.classList.add("is-open");
+        lb.setAttribute("aria-hidden", "false");
+        document.body.classList.add("is-locked");
+      }
+      function closeLightbox() {
+        lb.classList.remove("is-open");
+        lb.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("is-locked");
+      }
+      function step(dir) {
+        lbIdx = (lbIdx + dir + photos.length) % photos.length;
+        updateLightbox();
+      }
+
+      $("#lightboxClose").addEventListener("click", closeLightbox);
+      $("#lightboxPrev").addEventListener("click", function () { step(-1); });
+      $("#lightboxNext").addEventListener("click", function () { step(1); });
+      lb.addEventListener("click", function (e) { if (e.target === lb) closeLightbox(); });
+      document.addEventListener("keydown", function (e) {
+        if (!lb.classList.contains("is-open")) return;
+        if (e.key === "Escape") closeLightbox();
+        else if (e.key === "ArrowLeft") step(-1);
+        else if (e.key === "ArrowRight") step(1);
       });
-    }
-
-    // ---- Lightbox ----
-    var lb = $("#lightbox"), lbImg = $("#lightboxImg"), lbCap = $("#lightboxCaption");
-    var lbIdx = 0;
-
-    function updateLightbox() {
-      var p = photos[lbIdx];
-      lbImg.src = p.src;
-      lbImg.alt = p.label + " " + p.n;
-      lbCap.textContent = p.label + " · " + (lbIdx + 1) + " / " + photos.length;
-    }
-    function openLightbox(i) {
-      lbIdx = i;
-      updateLightbox();
-      lb.classList.add("is-open");
-      lb.setAttribute("aria-hidden", "false");
-      document.body.classList.add("is-locked");
-    }
-    function closeLightbox() {
-      lb.classList.remove("is-open");
-      lb.setAttribute("aria-hidden", "true");
-      document.body.classList.remove("is-locked");
-    }
-    function step(dir) {
-      lbIdx = (lbIdx + dir + photos.length) % photos.length;
-      updateLightbox();
-    }
-
-    $("#lightboxClose").addEventListener("click", closeLightbox);
-    $("#lightboxPrev").addEventListener("click", function () { step(-1); });
-    $("#lightboxNext").addEventListener("click", function () { step(1); });
-    lb.addEventListener("click", function (e) { if (e.target === lb) closeLightbox(); });
-    document.addEventListener("keydown", function (e) {
-      if (!lb.classList.contains("is-open")) return;
-      if (e.key === "Escape") closeLightbox();
-      else if (e.key === "ArrowLeft") step(-1);
-      else if (e.key === "ArrowRight") step(1);
     });
   })();
 
