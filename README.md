@@ -117,6 +117,7 @@ The guest's name then appears under *"Kepada Yth."* on the cover and pre-fills t
 | Change the venue or map pin | `config.js ▸ venue` (`mapsUrl` = the share link, `mapsEmbedQuery` = plain-text address) |
 | Add the bank account | `config.js ▸ gift.accounts[0]` — replace `BANK_NAME` / `0000000000` |
 | Add a second bank account | copy the commented-out block in `gift.accounts` |
+| Add/change the gift registry link | `config.js ▸ gift.registry.url` — leave it `""` to hide that card entirely |
 | Add photos | drop `bride.jpg` / `groom.jpg` into `assets/img/` (portrait, ~800×1000, under 300 KB) |
 | Add the cover photo | drop `cover.jpg` into `assets/img/` (portrait, phone-shaped, under 500 KB) — leave `config.js ▸ cover.photo` empty to use a plain gradient instead. The current photo already has the title/names/date/honorific designed into it, so the site only overlays a personalised guest name (from `?to=`) and the "Buka Undangan" button on top — a photo without that text baked in would need those brought back into the HTML/CSS |
 | Add prewedding photos | drop `tenis-1.jpg`…`museum-4.jpg` into `assets/img/gallery/` — see `assets/img/gallery/README.md`. Missing files just show a placeholder tile |
@@ -161,7 +162,7 @@ After any edit: `git add -A && git commit -m "update" && git push` — Pages red
 - [x] Date & time clickable → Google Calendar prefilled with title, date, time, venue, description
 - [x] Separate "Save the Date" buttons for Akad and Resepsi
 - [x] All couple/family/venue data isolated in `config.js`
-- [x] Gift section — "Wanna give us some gifts?" with bank account + delivery address, one-tap copy
+- [x] Gift section — "Wanna give us some gifts?" with bank account, gift registry link, and delivery address, one-tap copy
 - [x] Prewedding gallery — 3 concepts (tenis, taman, museum) with tabs, lightbox and graceful placeholders for missing photos
 - [x] Sections: cover · couple · prewedding gallery · countdown · events · maps · RSVP · wishes · gift · closing
 - [x] Elegant, modern, premium, mobile-first, responsive, smooth scrolling

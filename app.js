@@ -321,6 +321,17 @@
     '</div>';
   }).join("");
 
+  if (C.gift.registry && C.gift.registry.url) {
+    var reg = C.gift.registry;
+    $("#giftRegistry").innerHTML = '' +
+      (reg.text ? '<p class="gift-registry__text">' + esc(reg.text) + '</p>' : '') +
+      '<a class="btn btn--solid" href="' + esc(reg.url) + '" target="_blank" rel="noopener">' +
+        '<svg class="btn__ico" aria-hidden="true"><use href="#i-gift"/></svg>' +
+        '<span>Buka Gift Registry</span>' +
+      '</a>';
+    $("#giftRegistry").hidden = false;
+  }
+
   var ga = C.gift.address;
   $("#giftAddress").innerHTML = '' +
     '<p class="gift-addr__label">' + esc(ga.label) + '</p>' +

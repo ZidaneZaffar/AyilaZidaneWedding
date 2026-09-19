@@ -490,6 +490,9 @@ textarea{resize:vertical; min-height:110px; line-height:1.7}
 .copy:active{transform:scale(.96)}
 .copy.done{background:var(--gold)}
 .copy svg{width:14px; height:14px}
+.gift-registry{margin-top:16px; text-align:center}
+.gift-registry__text{margin:0 0 14px; font-size:14.5px; color:var(--muted); line-height:1.7}
+.gift-registry .btn--solid{margin-top:0}
 .gift-addr{
   margin-top:16px; background:var(--paper); border:1px dashed var(--line);
   border-radius:var(--r); padding:22px 20px; text-align:center;
