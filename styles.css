@@ -85,8 +85,8 @@ body::after{
   font-size:15.5px; line-height:1.85;
 }
 
-.divider{display:block; width:170px; height:48px; margin:20px auto 0; color:var(--sage)}
-.divider--light{color:var(--sage-l); opacity:.8}
+.divider{display:block; width:150px; height:auto; margin:20px auto 0}
+.divider--light{opacity:.9}
 
 .orn{
   position:absolute; width:150px; height:150px; color:var(--sage);
