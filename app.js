@@ -429,7 +429,7 @@
       attendance: att,
       guests: att === "Hadir" ? guestsInput.value : 0,
       message: msg
-    }).then(function (res) {
+    }, 30000).then(function (res) {
       if (!res || res.ok !== true) throw new Error(res && res.error || "FAILED");
       try { localStorage.setItem("wedding_guest_name", name); } catch (_) {}
       statusEl.className = "form__status ok";
@@ -442,9 +442,15 @@
       setTimeout(loadWishes, 1200);
     }).catch(function (err) {
       statusEl.className = "form__status bad";
-      statusEl.textContent = err.message === "TIMEOUT"
-        ? "Koneksi lambat. Mohon coba lagi."
-        : "Gagal mengirim. Periksa koneksi Anda lalu coba lagi.";
+      if (err.message === "TIMEOUT") {
+        // The server can still be processing (e.g. queued behind another submission)
+        // after our client-side wait gives up — refresh the feed rather than
+        // telling the guest it failed when it may well have gone through.
+        statusEl.textContent = "Respon server lama. Memeriksa apakah ucapan Anda sudah tersimpan…";
+        setTimeout(loadWishes, 2000);
+      } else {
+        statusEl.textContent = "Gagal mengirim. Periksa koneksi Anda lalu coba lagi.";
+      }
     }).finally(function () {
       submitBtn.classList.remove("is-loading"); submitBtn.disabled = false;
     });
