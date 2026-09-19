@@ -105,6 +105,8 @@ https://username.github.io/wedding-ayila-zidane/?to=Ade%20Fitriyani
 
 The guest's name then appears under *"Kepada Yth."* on the cover and pre-fills the RSVP form. Export the whole list as CSV for WhatsApp blasting.
 
+**Limiting how many guests someone can bring:** add `, <pax>` after the name in the textarea, e.g. `Bapak Budi Santoso & Keluarga, 2`. That guest's link gets `&pax=2` appended, which caps their RSVP guest-count stepper at 2 (they can still choose 1). Give someone `, 1` and their stepper is locked to 1 — they can't bring a plus-one. Leave the number off entirely and that guest just gets the normal site-wide `rsvp.maxGuests` limit, no extra cap.
+
 ---
 
 ## 5 · Maintenance cheatsheet
@@ -125,6 +127,7 @@ The guest's name then appears under *"Kepada Yth."* on the cover and pre-fills t
 | Add/remove a prewedding concept or photo | `config.js ▸ gallery.concepts` — the tabs and grid update automatically |
 | Add music | drop `song.mp3` into `assets/audio/` (under 4 MB). Set `music.src = ""` to hide the button |
 | Change the max guest count | `config.js ▸ rsvp.maxGuests` |
+| Cap a specific guest's pax to less than the site-wide max | give them `, <pax>` in `tools/link-generator.html`'s name list — see § 4 |
 | Hide wishes from non-attendees | `Code.gs ▸ HIDE_NON_ATTENDING_WISHES = true`, then re-deploy |
 | Delete a rude message | delete the row in the Google Sheet — it disappears from the site within 30 s |
 | Get an email per RSVP | in Apps Script: **Triggers ▸ Add trigger ▸ `onFormSubmitNotify` ▸ From spreadsheet ▸ On change** |

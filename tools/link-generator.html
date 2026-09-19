@@ -34,8 +34,8 @@
   <label for="base">URL Undangan</label>
   <input id="base" type="url" placeholder="https://zidanezaffar.github.io/AyilaZidaneWedding/">
 
-  <label for="names">Daftar Nama Tamu — satu nama per baris</label>
-  <textarea id="names" placeholder="Ade Fitriyani&#10;Bapak Budi Santoso &amp; Keluarga&#10;Rina Wulandari"></textarea>
+  <label for="names">Daftar Nama Tamu — satu nama per baris (opsional: <code>Nama, jumlah pax</code> untuk membatasi jumlah tamu)</label>
+  <textarea id="names" placeholder="Ade Fitriyani&#10;Bapak Budi Santoso &amp; Keluarga, 2&#10;Rina Wulandari, 1"></textarea>
 
   <div class="row">
     <button id="gen">Buat Link</button>
@@ -54,11 +54,19 @@ function build(){
   if(!/\/$/.test(base) && !/\.html$/.test(base)) base += '/';
   rows = document.getElementById('names').value.split('\n')
     .map(function(s){return s.trim();}).filter(Boolean)
-    .map(function(n){ return {name:n, url: base + '?to=' + encodeURIComponent(n)}; });
+    .map(function(line){
+      var parts = line.split(',');
+      var name = parts[0].trim();
+      var pax = parts.length > 1 ? parseInt(parts[1], 10) : NaN;
+      var url = base + '?to=' + encodeURIComponent(name);
+      if (pax >= 1) url += '&pax=' + pax;
+      return {name: name, pax: pax >= 1 ? pax : null, url: url};
+    });
 
   var tb = document.querySelector('#out tbody');
   tb.innerHTML = rows.map(function(r,i){
-    return '<tr><td>'+r.name.replace(/</g,'&lt;')+'</td><td class="link">'+r.url.replace(/</g,'&lt;')+
+    var name = r.name.replace(/</g,'&lt;') + (r.pax ? ' <span style="color:#9aa190">(' + r.pax + ' pax)</span>' : '');
+    return '<tr><td>'+name+'</td><td class="link">'+r.url.replace(/</g,'&lt;')+
            '</td><td class="act"><button data-i="'+i+'" class="ghost">Salin</button></td></tr>';
   }).join('');
   document.getElementById('out').hidden = !rows.length;
@@ -76,7 +84,7 @@ document.getElementById('copyAll').onclick = function(){
 };
 document.getElementById('csv').onclick = function(){
   if(!rows.length) build();
-  var csv = 'Nama,Link\n' + rows.map(function(r){return '"'+r.name.replace(/"/g,'""')+'","'+r.url+'"';}).join('\n');
+  var csv = 'Nama,Pax,Link\n' + rows.map(function(r){return '"'+r.name.replace(/"/g,'""')+'","'+(r.pax||'')+'","'+r.url+'"';}).join('\n');
   var a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
   a.download = 'guest-links.csv'; a.click();
