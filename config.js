@@ -47,7 +47,6 @@ window.WEDDING_CONFIG = {
      placeholder until the file exists.                            */
   gallery: {
     title: "Gallery",
-    intro: "Momen-momen prewedding kami — tenis, taman, dan museum.",
     concepts: [
       {
         key:   "tenis",

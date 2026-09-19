@@ -99,7 +99,6 @@
       return;
     }
     $("#galleryTitle").textContent = G.title || "Gallery";
-    $("#galleryIntro").textContent = G.intro || "";
 
     var marqueeEl = $("#galleryGrid");
     var row1 = $("#galleryRow1"), row2 = $("#galleryRow2");
@@ -250,9 +249,6 @@
   }
   $("#calBtn").href = calendarUrl(C.calendar);
 
-  $("#venueName").textContent        = C.venue.name;
-  $("#venueAddressText").textContent = C.venue.address;
-  $("#venueAddress").href            = C.venue.mapsUrl;
   var mapFrame = $("#mapFrame");
   if (mapFrame) mapFrame.src = "https://www.google.com/maps?q=" + encodeURIComponent(C.venue.mapsEmbedQuery) + "&output=embed";
 
