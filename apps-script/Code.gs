@@ -29,6 +29,15 @@ var HIDE_NON_ATTENDING_WISHES = false;  // true = only show wishes from guests w
 var HEADERS = ["Timestamp", "Nama", "Kehadiran", "Jumlah Tamu", "Ucapan & Doa", "Sumber"];
 
 
+/* Trims whitespace and caps length so submissions can't blow past the
+   sheet columns' intended size. */
+function clean(v, maxLen) {
+  var s = String(v == null ? "" : v).trim();
+  if (maxLen && s.length > maxLen) s = s.slice(0, maxLen);
+  return s;
+}
+
+
 /* ============ ENTRY POINT ============
    Everything comes through doGet so the site never needs CORS.  */
 function doGet(e) {
@@ -101,9 +110,13 @@ function handleSubmit(p) {
     var sheet = getSheet();
     sheet.appendRow([new Date(), name, att, guests, message, "Website"]);
     var row = sheet.getLastRow();
-    sheet.getRange(row, 1).setNumberFormat("yyyy-mm-dd hh:mm:ss");
-    sheet.getRange(row, 1, 1, HEADERS.length)
-         .setVerticalAlignment("top").setWrap(true);
+    try {
+      // Cosmetic only — a transient Sheets formatting hiccup here must never
+      // turn an already-saved row into a reported failure on the website.
+      sheet.getRange(row, 1).setNumberFormat("yyyy-mm-dd hh:mm:ss");
+      sheet.getRange(row, 1, 1, HEADERS.length)
+           .setVerticalAlignment("top").setWrap(true);
+    } catch (fmtErr) { /* row is already saved — ignore */ }
     return { ok: true, row: row };
   } finally {
     lock.releaseLock();
