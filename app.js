@@ -37,10 +37,10 @@
 
   /* ---------------------------------------------------------
      COVER
+     The cover photo itself already carries the eyebrow/names/date/
+     honorific as part of its design — only a personalised guest name
+     (from ?to=) is rendered on top, and only when one is given.
      --------------------------------------------------------- */
-  $("#coverNames").innerHTML = namesHTML;
-  $("#coverDate").textContent = C.wedding.dayLabel + ", " + C.wedding.dateLabel;
-
   if (C.cover && C.cover.photo) {
     var coverImg = $("#coverPhoto");
     coverImg.onload  = function () { coverImg.classList.add("is-ready"); };
@@ -52,7 +52,10 @@
   // Personalised greeting:  index.html?to=Ade%20Fitriyani
   var params = new URLSearchParams(location.search);
   var guest = (params.get("to") || params.get("guest") || "").trim();
-  $("#guestName").textContent = guest ? decodeURIComponent(guest) : C.meta.defaultGuest;
+  if (guest) {
+    $("#guestName").textContent = decodeURIComponent(guest);
+    $("#coverGuestBlock").hidden = false;
+  }
 
   /* ---------------------------------------------------------
      QUOTE / COUPLE / CLOSING

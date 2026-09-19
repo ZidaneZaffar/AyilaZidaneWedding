@@ -63,26 +63,20 @@
 
 <!-- ============ COVER ============ -->
 <section id="cover" class="cover">
-  <div class="cover__bg" aria-hidden="true"><img id="coverPhoto" alt=""></div>
-  <div class="cover__scrim" aria-hidden="true"></div>
-  <svg class="orn orn--tl" aria-hidden="true"><use href="#i-leafcorner"/></svg>
+  <div class="cover__card">
+    <div class="cover__bg" aria-hidden="true"><img id="coverPhoto" alt=""></div>
+    <div class="cover__scrim" aria-hidden="true"></div>
 
-  <div class="cover__top">
-    <p class="eyebrow cv-a">The Wedding Of</p>
-    <h1 class="cover__names cv-b" id="coverNames">&nbsp;</h1>
-    <p class="cover__date cv-c" id="coverDate">&nbsp;</p>
-  </div>
+    <div class="cover__bottom">
+      <div class="cover__guest cv-d" id="coverGuestBlock" hidden>
+        <p class="cover__guest-name" id="guestName">&nbsp;</p>
+      </div>
 
-  <div class="cover__bottom">
-    <div class="cover__guest cv-d">
-      <p class="cover__guest-label">Kepada Yang Terhormat</p>
-      <p class="cover__guest-name" id="guestName">&nbsp;</p>
+      <button type="button" class="btn btn--open cv-e" id="openBtn">
+        <svg class="btn__ico" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M2.5 7.5 12 14l9.5-6.5"/></g></svg>
+        <span>Buka Undangan</span>
+      </button>
     </div>
-
-    <button type="button" class="btn btn--open cv-e" id="openBtn">
-      <svg class="btn__ico" viewBox="0 0 24 24" aria-hidden="true"><g fill="none" stroke="currentColor" stroke-width="1.3"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M2.5 7.5 12 14l9.5-6.5"/></g></svg>
-      <span>Buka Undangan</span>
-    </button>
   </div>
 </section>
 
