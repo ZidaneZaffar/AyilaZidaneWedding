@@ -31,7 +31,15 @@ window.WEDDING_CONFIG = {
     displayTitle: "Ayila &amp; Zidane"
   },
 
-  /* ---------- 2. PREWEDDING GALLERY ----------
+  /* ---------- 2. COVER PHOTO ----------
+     The full-bleed photo behind the cover screen (before "Buka
+     Undangan" is tapped). Drop your photo into assets/img/ and put
+     its path below — leave "" to fall back to a plain gradient.    */
+  cover: {
+    photo: "assets/img/cover.jpg"
+  },
+
+  /* ---------- 3. PREWEDDING GALLERY ----------
      Three photoshoot concepts, each with its own set of photos.
      Drop files into assets/img/gallery/ using the paths below —
      any concept/photo you don't have yet just shows a
@@ -76,7 +84,7 @@ window.WEDDING_CONFIG = {
     ]
   },
 
-  /* ---------- 3. DATE & TIME ----------
+  /* ---------- 4. DATE & TIME ----------
      Use ISO 8601 with the +07:00 (WIB) offset.
      The countdown targets `countdownTo`.                        */
   wedding: {
@@ -87,7 +95,7 @@ window.WEDDING_CONFIG = {
     countdownTo:  "2026-10-24T14:00:00+07:00"
   },
 
-  /* ---------- 4. EVENTS ---------- */
+  /* ---------- 5. EVENTS ---------- */
   events: [
     {
       key:      "akad",
@@ -111,7 +119,7 @@ window.WEDDING_CONFIG = {
     }
   ],
 
-  /* ---------- 5. VENUE ---------- */
+  /* ---------- 6. VENUE ---------- */
   venue: {
     name:      "ARTOTEL Living World Kota Wisata",
     address:   "Jl. Boulevard Kota Wisata, Ciangsana, Kec. Gn. Putri, Kabupaten Bogor, Jawa Barat 16968",
@@ -120,7 +128,7 @@ window.WEDDING_CONFIG = {
     mapsEmbedQuery: "ARTOTEL Living World Kota Wisata, Jl. Boulevard Kota Wisata, Ciangsana, Gunung Putri, Bogor, Jawa Barat 16968"
   },
 
-  /* ---------- 6. GOOGLE CALENDAR ---------- */
+  /* ---------- 7. GOOGLE CALENDAR ---------- */
   calendar: {
     title:       "Pernikahan Ayila & Zidane",
     // Calendar event spans from Akad start to Resepsi end.
@@ -129,7 +137,7 @@ window.WEDDING_CONFIG = {
     description: "Dengan penuh sukacita kami mengundang Anda ke pernikahan Ayila Adzkiya Sucahyo & M Zidane Zaffar.\\n\\nAkad Nikah : 14.00 - 16.00 WIB\\nResepsi : 19.00 - 21.00 WIB"
   },
 
-  /* ---------- 7. GIFT ----------
+  /* ---------- 8. GIFT ----------
      >>> REPLACE THE PLACEHOLDERS BELOW <<<                      */
   gift: {
     heading:  "Wanna give us some gifts?",
@@ -152,7 +160,7 @@ window.WEDDING_CONFIG = {
     }
   },
 
-  /* ---------- 8. RSVP BACKEND ----------
+  /* ---------- 9. RSVP BACKEND ----------
      Paste your Apps Script Web App URL here after deploying.
      See README.md → "Google Sheets setup".                      */
   rsvp: {
@@ -163,7 +171,7 @@ window.WEDDING_CONFIG = {
     pollInterval:  30000
   },
 
-  /* ---------- 9. QUOTE & CLOSING ---------- */
+  /* ---------- 10. QUOTE & CLOSING ---------- */
   quote: {
     text: "Dan di antara tanda-tanda kekuasaan-Nya ialah Dia menciptakan untukmu pasangan hidup dari jenismu sendiri, supaya kamu cenderung dan merasa tenteram kepadanya, dan dijadikan-Nya di antaramu rasa kasih dan sayang.",
     source: "QS. Ar-Rum : 21"
@@ -173,7 +181,7 @@ window.WEDDING_CONFIG = {
     signOff: "Kami yang berbahagia,"
   },
 
-  /* ---------- 10. MUSIC ----------
+  /* ---------- 11. MUSIC ----------
      Drop an .mp3 into assets/audio/ and put the path here.
      Leave "" to hide the floating music button entirely.        */
   music: {
@@ -181,7 +189,7 @@ window.WEDDING_CONFIG = {
     autoplay: true          // starts after the guest taps "Open Invitation"
   },
 
-  /* ---------- 11. META / SHARING ---------- */
+  /* ---------- 12. META / SHARING ---------- */
   meta: {
     siteTitle:   "Ayila & Zidane — Wedding Invitation",
     description: "24 Oktober 2026 · ARTOTEL Living World Kota Wisata",
