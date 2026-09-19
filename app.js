@@ -693,6 +693,7 @@
   var audio = $("#audio"), musicBtn = $("#musicBtn"), musicReady = false;
   if (C.music && C.music.src) {
     audio.src = C.music.src;
+    audio.volume = .5; // capped so it never starts jarringly loud, even on manual play
     audio.addEventListener("canplay", function () { musicReady = true; });
     audio.addEventListener("error", function () { musicBtn.hidden = true; });
     musicBtn.addEventListener("click", function () {
@@ -725,10 +726,10 @@
         audio.play().then(function () {
           musicBtn.classList.add("is-playing");
           var v = 0, fade = setInterval(function () {          // gentle fade-in
-            v = Math.min(.55, v + .03); audio.volume = v;
-            if (v >= .55) clearInterval(fade);
+            v = Math.min(.5, v + .03); audio.volume = v;
+            if (v >= .5) clearInterval(fade);
           }, 90);
-        }).catch(function () { audio.volume = .55; });
+        }).catch(function () { audio.volume = .5; });
       }
     }
     loadWishes();
