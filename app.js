@@ -58,11 +58,8 @@
   }
 
   /* ---------------------------------------------------------
-     QUOTE / COUPLE / CLOSING
+     COUPLE / CLOSING
      --------------------------------------------------------- */
-  $("#quoteText").textContent = C.quote.text;
-  $("#quoteSrc").textContent  = C.quote.source;
-
   function fillPerson(rootSel, p) {
     var root = $(rootSel);
     $("[data-name]", root).textContent   = p.fullName;
