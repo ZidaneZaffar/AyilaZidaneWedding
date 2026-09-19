@@ -150,7 +150,7 @@
     fillRow(row1, idxA);
     fillRow(row2, idxB);
     if (idxLS.length) fillRow(rowLS, idxLS);
-    else if (galleryGridLS) galleryGridLS.remove();
+    else { var secLS = $("#sec-gallery-ls"); if (secLS) secLS.remove(); galleryGridLS = null; }
 
     [galleryGrid, galleryGridLS].forEach(function (marqueeEl) {
       if (!marqueeEl) return;

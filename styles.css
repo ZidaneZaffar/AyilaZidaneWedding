@@ -280,7 +280,6 @@ body::after{
 .gtile.is-empty{cursor:default}
 
 .gtile--ls{width:210px; aspect-ratio:3/2}
-.gallery-marquee--ls{margin-top:10px}
 
 @media (min-width:700px){
   .gallery-track{gap:16px; padding:0 6px}

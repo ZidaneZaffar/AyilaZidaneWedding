@@ -180,7 +180,7 @@ After any edit: `git add -A && git commit -m "update" && git push` — Pages red
 - [x] All couple/family/venue data isolated in `config.js`
 - [x] Gift section — "Wanna give us some gifts?" with bank account, gift registry link, and delivery address, one-tap copy
 - [x] Prewedding gallery — 3 concepts (tenis, taman, museum), auto-scrolling portrait + landscape rows, lightbox and graceful placeholders for missing photos
-- [x] Sections: cover · couple · prewedding gallery · countdown · events · maps · RSVP · wishes · gift · closing
+- [x] Sections: cover · couple · prewedding gallery · countdown · events · maps · RSVP · wishes · gift · prewedding gallery (landscape) · closing
 - [x] Elegant, modern, premium, mobile-first, responsive, smooth scrolling
 - [x] Fade-in scroll animations, floating music button, safe-area insets for iPhone
 - [x] Deployed via GitHub Pages, no build step, ~40 KB total
