@@ -46,7 +46,12 @@ window.WEDDING_CONFIG = {
      any photo you don't have yet just shows a "Segera Hadir"
      placeholder until the file exists.                            */
   gallery: {
-    title: "Gallery",
+    /* `photos` (portrait, top two rows) and `landscape` (bottom row)
+       are independent lists -- each can hold any number of files,
+       they don't need to match each other or match between concepts.
+       Tenis can have 3 landscape shots while museum has 5; just add
+       or remove lines below. Any file listed here that hasn't been
+       uploaded yet just shows a "Segera Hadir" placeholder tile.   */
     concepts: [
       {
         key:   "tenis",
@@ -57,6 +62,11 @@ window.WEDDING_CONFIG = {
           "assets/img/gallery/tenis-2.jpg",
           "assets/img/gallery/tenis-3.jpg",
           "assets/img/gallery/tenis-4.jpg"
+        ],
+        landscape: [
+          "assets/img/gallery/tenis-1-ls.jpg",
+          "assets/img/gallery/tenis-2-ls.jpg",
+          "assets/img/gallery/tenis-3-ls.jpg"
         ]
       },
       {
@@ -68,6 +78,12 @@ window.WEDDING_CONFIG = {
           "assets/img/gallery/taman-2.jpg",
           "assets/img/gallery/taman-3.jpg",
           "assets/img/gallery/taman-4.jpg"
+        ],
+        landscape: [
+          "assets/img/gallery/taman-1-ls.jpg",
+          "assets/img/gallery/taman-2-ls.jpg",
+          "assets/img/gallery/taman-3-ls.jpg",
+          "assets/img/gallery/taman-4-ls.jpg"
         ]
       },
       {
@@ -79,6 +95,12 @@ window.WEDDING_CONFIG = {
           "assets/img/gallery/museum-2.jpg",
           "assets/img/gallery/museum-3.jpg",
           "assets/img/gallery/museum-4.jpg"
+        ],
+        landscape: [
+          "assets/img/gallery/museum-1-ls.jpg",
+          "assets/img/gallery/museum-2-ls.jpg",
+          "assets/img/gallery/museum-3-ls.jpg",
+          "assets/img/gallery/museum-4-ls.jpg"
         ]
       }
     ]

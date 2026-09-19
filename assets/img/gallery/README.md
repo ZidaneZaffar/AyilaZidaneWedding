@@ -1,19 +1,31 @@
 # Prewedding gallery photos
 
-Drop your prewedding photos here using these exact filenames. The website
-reads the list from `config.js ▸ gallery.concepts[].photos` — any file that
-isn't here yet just shows a "Segera Hadir" placeholder tile, so you can add
-them whenever they're ready without touching any code.
+Drop your prewedding photos here using these filenames. The website reads
+the lists from `config.js ▸ gallery.concepts[].photos` (portrait, the top
+two auto-scrolling rows) and `config.js ▸ gallery.concepts[].landscape`
+(the wider row at the bottom) — any file that isn't here yet just shows a
+"Segera Hadir" placeholder tile, so you can add them whenever they're ready
+without touching any code.
 
 ```
-tenis-1.jpg   tenis-2.jpg   tenis-3.jpg   tenis-4.jpg
-taman-1.jpg   taman-2.jpg   taman-3.jpg   taman-4.jpg
-museum-1.jpg  museum-2.jpg  museum-3.jpg  museum-4.jpg
+Portrait (top two rows):
+  tenis-1.jpg    tenis-2.jpg    tenis-3.jpg    tenis-4.jpg
+  taman-1.jpg    taman-2.jpg    taman-3.jpg    taman-4.jpg
+  museum-1.jpg   museum-2.jpg   museum-3.jpg   museum-4.jpg
+
+Landscape (bottom row):
+  tenis-1-ls.jpg    tenis-2-ls.jpg    tenis-3-ls.jpg
+  taman-1-ls.jpg    taman-2-ls.jpg    taman-3-ls.jpg    taman-4-ls.jpg
+  museum-1-ls.jpg   museum-2-ls.jpg   museum-3-ls.jpg   museum-4-ls.jpg
 ```
+
+Neither list is a fixed count — tenis can have 3 landscape shots while
+museum has 5, and they don't need to match their own portrait count either.
+Just add/remove entries in the matching `photos`/`landscape` array (or a
+whole new object in `concepts` for another shoot) in `config.js`; the rows
+update automatically, nothing else to touch.
 
 Tips:
-- Portrait or square photos (e.g. 1200×1500) work best with the grid.
-- Keep each file under ~400 KB (export at ~80% JPEG quality) so the page stays fast.
-- Want more or fewer than 4 photos per concept, or a 4th concept? Just add/remove
-  entries in the matching `photos` array (or a whole new object in `concepts`)
-  in `config.js` — the tabs and grid update automatically.
+- Portrait shots: portrait or square photos (e.g. 1200×1500) work best.
+- Landscape shots: wide photos (e.g. 1500×1000) work best — they render in a noticeably wider tile.
+- Keep each file under ~400 KB (export at ~80% JPEG quality), or just run `python3 tools/optimize-images.py` after adding them and it'll do that for you.
