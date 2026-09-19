@@ -15,7 +15,7 @@ A mobile-first, single-page wedding invitation with live RSVP, a real-time wishe
 ├── config.js        ← EDIT THIS  all names, dates, addresses, bank details
 ├── apps-script/Code.gs           the Google Apps Script backend
 ├── tools/link-generator.html     make personalised links per guest
-├── assets/img/                   photos (groom.jpg, bride.jpg, og-cover.jpg)
+├── assets/img/                   photos (cover.jpg, groom.jpg, bride.jpg, og-cover.jpg)
 ├── assets/img/gallery/           prewedding photos (tenis/taman/museum)
 ├── assets/audio/                 song.mp3
 ├── .github/workflows/deploy.yml  auto-deploy to GitHub Pages
@@ -118,6 +118,7 @@ The guest's name then appears under *"Kepada Yth."* on the cover and pre-fills t
 | Add the bank account | `config.js ▸ gift.accounts[0]` — replace `BANK_NAME` / `0000000000` |
 | Add a second bank account | copy the commented-out block in `gift.accounts` |
 | Add photos | drop `bride.jpg` / `groom.jpg` into `assets/img/` (portrait, ~800×1000, under 300 KB) |
+| Add the cover photo | drop `cover.jpg` into `assets/img/` (portrait, ~1200×2000, under 500 KB) — leave `config.js ▸ cover.photo` empty to use a plain gradient instead |
 | Add prewedding photos | drop `tenis-1.jpg`…`museum-4.jpg` into `assets/img/gallery/` — see `assets/img/gallery/README.md`. Missing files just show a placeholder tile |
 | Add/remove a prewedding concept or photo | `config.js ▸ gallery.concepts` — the tabs and grid update automatically |
 | Add music | drop `song.mp3` into `assets/audio/` (under 4 MB). Set `music.src = ""` to hide the button |

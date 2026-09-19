@@ -41,6 +41,14 @@
   $("#coverNames").innerHTML = namesHTML;
   $("#coverDate").textContent = C.wedding.dayLabel + ", " + C.wedding.dateLabel;
 
+  if (C.cover && C.cover.photo) {
+    var coverImg = $("#coverPhoto");
+    coverImg.onload  = function () { coverImg.classList.add("is-ready"); };
+    coverImg.onerror = function () { coverImg.remove(); };
+    coverImg.alt = C.couple.displayTitle.replace(/<[^>]+>/g, "").replace(/&amp;/g, "&");
+    coverImg.src = C.cover.photo;
+  }
+
   // Personalised greeting:  index.html?to=Ade%20Fitriyani
   var params = new URLSearchParams(location.search);
   var guest = (params.get("to") || params.get("guest") || "").trim();
