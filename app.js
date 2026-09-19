@@ -86,7 +86,9 @@
   fillPerson("#personGroom", C.couple.groom);
 
   /* ---------------------------------------------------------
-     PREWEDDING GALLERY + LIGHTBOX
+     GALLERY + LIGHTBOX
+     All photos from every shoot are flattened into one continuous
+     2-column grid — no tabs, just scroll.
      --------------------------------------------------------- */
   (function gallery() {
     var G = C.gallery;
@@ -94,35 +96,23 @@
       var sec = $("#sec-gallery"); if (sec) sec.remove();
       return;
     }
-    $("#galleryTitle").textContent = G.title || "Prewedding";
+    $("#galleryTitle").textContent = G.title || "Gallery";
     $("#galleryIntro").textContent = G.intro || "";
 
-    var tabsEl = $("#galleryTabs"), gridEl = $("#galleryGrid");
-    var activeKey = G.concepts[0].key;
-    var current = function () {
-      var i, c;
-      for (i = 0; i < G.concepts.length; i++) { c = G.concepts[i]; if (c.key === activeKey) return c; }
-      return G.concepts[0];
-    };
-
-    function renderTabs() {
-      tabsEl.innerHTML = G.concepts.map(function (c) {
-        var active = c.key === activeKey;
-        return '' +
-        '<button type="button" class="gtab' + (active ? ' is-active' : '') + '" data-concept="' + esc(c.key) + '" role="tab" aria-selected="' + active + '">' +
-          '<svg class="gtab__ico" aria-hidden="true"><use href="#i-' + esc(c.icon) + '"/></svg>' +
-          '<span>' + esc(c.label) + '</span>' +
-        '</button>';
-      }).join("");
-    }
+    var gridEl = $("#galleryGrid");
+    var photos = [];
+    G.concepts.forEach(function (c) {
+      c.photos.forEach(function (src, i) {
+        photos.push({ src: src, icon: c.icon, label: c.label, n: i + 1 });
+      });
+    });
 
     function renderGrid() {
-      var c = current();
-      gridEl.innerHTML = c.photos.map(function (src, i) {
+      gridEl.innerHTML = photos.map(function (p, i) {
         return '' +
-        '<button type="button" class="gtile" data-idx="' + i + '" aria-label="Lihat foto ' + (i + 1) + ' — ' + esc(c.label) + '">' +
-          '<img data-src="' + esc(src) + '" alt="Prewedding ' + esc(c.label) + ' ' + (i + 1) + '">' +
-          '<span class="gtile__ph"><svg aria-hidden="true"><use href="#i-' + esc(c.icon) + '"/></svg><em>Segera Hadir</em></span>' +
+        '<button type="button" class="gtile" data-idx="' + i + '" aria-label="Lihat foto ' + (i + 1) + ' — ' + esc(p.label) + '">' +
+          '<img data-src="' + esc(p.src) + '" alt="' + esc(p.label) + ' ' + p.n + '">' +
+          '<span class="gtile__ph"><svg aria-hidden="true"><use href="#i-' + esc(p.icon) + '"/></svg><em>Segera Hadir</em></span>' +
         '</button>';
       }).join("");
       $$(".gtile img", gridEl).forEach(function (img) {
@@ -133,24 +123,17 @@
       });
     }
 
-    tabsEl.addEventListener("click", function (e) {
-      var b = e.target.closest("[data-concept]");
-      if (!b || b.dataset.concept === activeKey) return;
-      activeKey = b.dataset.concept;
-      renderTabs(); renderGrid();
-    });
-
-    renderTabs(); renderGrid();
+    renderGrid();
 
     // ---- Lightbox ----
     var lb = $("#lightbox"), lbImg = $("#lightboxImg"), lbCap = $("#lightboxCaption");
     var lbIdx = 0;
 
     function updateLightbox() {
-      var c = current();
-      lbImg.src = c.photos[lbIdx];
-      lbImg.alt = "Prewedding " + c.label + " " + (lbIdx + 1);
-      lbCap.textContent = c.label + " · " + (lbIdx + 1) + " / " + c.photos.length;
+      var p = photos[lbIdx];
+      lbImg.src = p.src;
+      lbImg.alt = p.label + " " + p.n;
+      lbCap.textContent = p.label + " · " + (lbIdx + 1) + " / " + photos.length;
     }
     function openLightbox(i) {
       lbIdx = i;
@@ -165,8 +148,7 @@
       document.body.classList.remove("is-locked");
     }
     function step(dir) {
-      var c = current();
-      lbIdx = (lbIdx + dir + c.photos.length) % c.photos.length;
+      lbIdx = (lbIdx + dir + photos.length) % photos.length;
       updateLightbox();
     }
 
