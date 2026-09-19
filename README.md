@@ -139,7 +139,7 @@ After any edit: `git add -A && git commit -m "update" && git push` — Pages red
 |---|---|
 | "RSVP belum aktif" under the form | `config.js ▸ rsvp.scriptUrl` is still empty |
 | "Gagal mengirim" | Deployment access isn't **Anyone**, or you edited `Code.gs` without re-deploying a new version |
-| Row appears in the Sheet but the site still shows an error ("Respon server lama…" / timeout) | The Apps Script response took longer than the client's wait — usually fine on the next load since the wish still saved. If it happens often, redeploy `Code.gs` (it now waits at most 10s for the write lock, comfortably under the site's 30s timeout) |
+| Row appears in the Sheet but the site still shows "Gagal mengirim" / "Respon server lama" | The row saved fine — `handleSubmit` threw *after* the write (a transient Sheets formatting hiccup, or a stale copy of `Code.gs` missing the `clean()` helper) and the site can't tell the difference from a real failure. Re-paste the current `apps-script/Code.gs` into the Apps Script editor and deploy a **new version** — this is fixed there |
 | Wishes never appear | Open `<exec-url>?action=wishes` directly — it should return JSON. If it asks you to sign in, the deployment access is wrong |
 | Map iframe blank | Check `venue.mapsEmbedQuery` is a plain address string, not a shortened `maps.app.goo.gl` link |
 | Music doesn't autoplay | Expected — iOS and Android block autoplay until the guest taps. The button starts it; the "Buka Undangan" tap usually counts as the gesture |
