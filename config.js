@@ -156,7 +156,7 @@ window.WEDDING_CONFIG = {
      Paste your Apps Script Web App URL here after deploying.
      See README.md → "Google Sheets setup".                      */
   rsvp: {
-    scriptUrl:     "https://script.google.com/macros/s/AKfycbx1Erc2KMLfAPLyi7VElRKCJ1l2X25udAAXfbPSRLuyGXwo1lkRkulLOsabjyqp2gythQ/exec",   // e.g. "https://script.google.com/macros/s/AKfy.../exec"
+    scriptUrl:     "https://script.google.com/macros/s/AKfycbw8JajgP0xZ8GbwdWFP_6PKEuv6qyEbLePkRidQ1ThZby5AKg67AZ370As0bYw03YYrcA/exec",   // e.g. "https://script.google.com/macros/s/AKfy.../exec"
     maxGuests:     5,
     wishesPerPage: 5,
     // How often (ms) the wishes feed refreshes while the page is open.
