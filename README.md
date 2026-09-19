@@ -16,6 +16,7 @@ A mobile-first, single-page wedding invitation with live RSVP, a real-time wishe
 ├── apps-script/Code.gs           the Google Apps Script backend
 ├── tools/link-generator.html     make personalised links per guest
 ├── assets/img/                   photos (groom.jpg, bride.jpg, og-cover.jpg)
+├── assets/img/gallery/           prewedding photos (tenis/taman/museum)
 ├── assets/audio/                 song.mp3
 ├── .github/workflows/deploy.yml  auto-deploy to GitHub Pages
 ├── .nojekyll                     stops Pages from mangling the files
@@ -117,6 +118,8 @@ The guest's name then appears under *"Kepada Yth."* on the cover and pre-fills t
 | Add the bank account | `config.js ▸ gift.accounts[0]` — replace `BANK_NAME` / `0000000000` |
 | Add a second bank account | copy the commented-out block in `gift.accounts` |
 | Add photos | drop `bride.jpg` / `groom.jpg` into `assets/img/` (portrait, ~800×1000, under 300 KB) |
+| Add prewedding photos | drop `tenis-1.jpg`…`museum-4.jpg` into `assets/img/gallery/` — see `assets/img/gallery/README.md`. Missing files just show a placeholder tile |
+| Add/remove a prewedding concept or photo | `config.js ▸ gallery.concepts` — the tabs and grid update automatically |
 | Add music | drop `song.mp3` into `assets/audio/` (under 4 MB). Set `music.src = ""` to hide the button |
 | Change the max guest count | `config.js ▸ rsvp.maxGuests` |
 | Hide wishes from non-attendees | `Code.gs ▸ HIDE_NON_ATTENDING_WISHES = true`, then re-deploy |
@@ -157,7 +160,8 @@ After any edit: `git add -A && git commit -m "update" && git push` — Pages red
 - [x] Separate "Save the Date" buttons for Akad and Resepsi
 - [x] All couple/family/venue data isolated in `config.js`
 - [x] Gift section — "Wanna give us some gifts?" with bank account + delivery address, one-tap copy
-- [x] Sections: cover · couple · countdown · events · maps · RSVP · wishes · gift · closing
+- [x] Prewedding gallery — 3 concepts (tenis, taman, museum) with tabs, lightbox and graceful placeholders for missing photos
+- [x] Sections: cover · couple · prewedding gallery · countdown · events · maps · RSVP · wishes · gift · closing
 - [x] Elegant, modern, premium, mobile-first, responsive, smooth scrolling
 - [x] Fade-in scroll animations, floating music button, safe-area insets for iPhone
 - [x] Deployed via GitHub Pages, no build step, ~40 KB total

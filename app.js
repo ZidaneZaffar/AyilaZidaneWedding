@@ -77,6 +77,108 @@
   fillPerson("#personBride", C.couple.bride);
   fillPerson("#personGroom", C.couple.groom);
 
+  /* ---------------------------------------------------------
+     PREWEDDING GALLERY + LIGHTBOX
+     --------------------------------------------------------- */
+  (function gallery() {
+    var G = C.gallery;
+    if (!G || !Array.isArray(G.concepts) || !G.concepts.length) {
+      var sec = $("#sec-gallery"); if (sec) sec.remove();
+      return;
+    }
+    $("#galleryTitle").textContent = G.title || "Prewedding";
+    $("#galleryIntro").textContent = G.intro || "";
+
+    var tabsEl = $("#galleryTabs"), gridEl = $("#galleryGrid");
+    var activeKey = G.concepts[0].key;
+    var current = function () {
+      var i, c;
+      for (i = 0; i < G.concepts.length; i++) { c = G.concepts[i]; if (c.key === activeKey) return c; }
+      return G.concepts[0];
+    };
+
+    function renderTabs() {
+      tabsEl.innerHTML = G.concepts.map(function (c) {
+        var active = c.key === activeKey;
+        return '' +
+        '<button type="button" class="gtab' + (active ? ' is-active' : '') + '" data-concept="' + esc(c.key) + '" role="tab" aria-selected="' + active + '">' +
+          '<svg class="gtab__ico" aria-hidden="true"><use href="#i-' + esc(c.icon) + '"/></svg>' +
+          '<span>' + esc(c.label) + '</span>' +
+        '</button>';
+      }).join("");
+    }
+
+    function renderGrid() {
+      var c = current();
+      gridEl.innerHTML = c.photos.map(function (src, i) {
+        return '' +
+        '<button type="button" class="gtile" data-idx="' + i + '" aria-label="Lihat foto ' + (i + 1) + ' — ' + esc(c.label) + '">' +
+          '<img data-src="' + esc(src) + '" alt="Prewedding ' + esc(c.label) + ' ' + (i + 1) + '">' +
+          '<span class="gtile__ph"><svg aria-hidden="true"><use href="#i-' + esc(c.icon) + '"/></svg><em>Segera Hadir</em></span>' +
+        '</button>';
+      }).join("");
+      $$(".gtile img", gridEl).forEach(function (img) {
+        img.loading = "lazy";
+        img.onload  = function () { img.closest(".gtile").classList.add("is-ready"); };
+        img.onerror = function () { img.closest(".gtile").classList.add("is-empty"); img.remove(); };
+        img.src = img.dataset.src;
+      });
+    }
+
+    tabsEl.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-concept]");
+      if (!b || b.dataset.concept === activeKey) return;
+      activeKey = b.dataset.concept;
+      renderTabs(); renderGrid();
+    });
+
+    renderTabs(); renderGrid();
+
+    // ---- Lightbox ----
+    var lb = $("#lightbox"), lbImg = $("#lightboxImg"), lbCap = $("#lightboxCaption");
+    var lbIdx = 0;
+
+    function updateLightbox() {
+      var c = current();
+      lbImg.src = c.photos[lbIdx];
+      lbImg.alt = "Prewedding " + c.label + " " + (lbIdx + 1);
+      lbCap.textContent = c.label + " · " + (lbIdx + 1) + " / " + c.photos.length;
+    }
+    function openLightbox(i) {
+      lbIdx = i;
+      updateLightbox();
+      lb.classList.add("is-open");
+      lb.setAttribute("aria-hidden", "false");
+      document.body.classList.add("is-locked");
+    }
+    function closeLightbox() {
+      lb.classList.remove("is-open");
+      lb.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("is-locked");
+    }
+    function step(dir) {
+      var c = current();
+      lbIdx = (lbIdx + dir + c.photos.length) % c.photos.length;
+      updateLightbox();
+    }
+
+    gridEl.addEventListener("click", function (e) {
+      var t = e.target.closest(".gtile");
+      if (!t || t.classList.contains("is-empty")) return;
+      openLightbox(parseInt(t.dataset.idx, 10));
+    });
+    $("#lightboxClose").addEventListener("click", closeLightbox);
+    $("#lightboxPrev").addEventListener("click", function () { step(-1); });
+    $("#lightboxNext").addEventListener("click", function () { step(1); });
+    lb.addEventListener("click", function (e) { if (e.target === lb) closeLightbox(); });
+    document.addEventListener("keydown", function (e) {
+      if (!lb.classList.contains("is-open")) return;
+      if (e.key === "Escape") closeLightbox();
+      else if (e.key === "ArrowLeft") step(-1);
+      else if (e.key === "ArrowRight") step(1);
+    });
+  })();
+
   $("#closingText").textContent    = C.closing.text;
   $("#closingSignoff").textContent = C.closing.signOff;
   $("#closingNames").innerHTML     = namesHTML;
