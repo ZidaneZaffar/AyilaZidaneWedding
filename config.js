@@ -39,14 +39,15 @@ window.WEDDING_CONFIG = {
     photo: "assets/img/cover.jpg"
   },
 
-  /* ---------- 3. PREWEDDING GALLERY ----------
-     Three photoshoot concepts, each with its own set of photos.
-     Drop files into assets/img/gallery/ using the paths below —
-     any concept/photo you don't have yet just shows a
-     "Segera Hadir" placeholder until the file exists.            */
+  /* ---------- 3. GALLERY ----------
+     All photos are shown together in one scrolling grid (no tabs) —
+     `concepts` here is just how the photos are grouped/organized by
+     shoot. Drop files into assets/img/gallery/ using the paths below —
+     any photo you don't have yet just shows a "Segera Hadir"
+     placeholder until the file exists.                            */
   gallery: {
-    title: "Prewedding Story",
-    intro: "Tiga suasana, satu cerita cinta — tenis, taman, dan museum.",
+    title: "Gallery",
+    intro: "Momen-momen prewedding kami — tenis, taman, dan museum.",
     concepts: [
       {
         key:   "tenis",

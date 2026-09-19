@@ -86,7 +86,11 @@
   fillPerson("#personGroom", C.couple.groom);
 
   /* ---------------------------------------------------------
-     PREWEDDING GALLERY + LIGHTBOX
+     GALLERY + LIGHTBOX
+     All photos from every shoot are flattened into two rows that
+     auto-scroll horizontally in opposite directions (no tabs, no
+     manual paging) — each row's track is duplicated once so the
+     CSS animation loops seamlessly.
      --------------------------------------------------------- */
   (function gallery() {
     var G = C.gallery;
@@ -94,63 +98,65 @@
       var sec = $("#sec-gallery"); if (sec) sec.remove();
       return;
     }
-    $("#galleryTitle").textContent = G.title || "Prewedding";
+    $("#galleryTitle").textContent = G.title || "Gallery";
     $("#galleryIntro").textContent = G.intro || "";
 
-    var tabsEl = $("#galleryTabs"), gridEl = $("#galleryGrid");
-    var activeKey = G.concepts[0].key;
-    var current = function () {
-      var i, c;
-      for (i = 0; i < G.concepts.length; i++) { c = G.concepts[i]; if (c.key === activeKey) return c; }
-      return G.concepts[0];
-    };
-
-    function renderTabs() {
-      tabsEl.innerHTML = G.concepts.map(function (c) {
-        var active = c.key === activeKey;
-        return '' +
-        '<button type="button" class="gtab' + (active ? ' is-active' : '') + '" data-concept="' + esc(c.key) + '" role="tab" aria-selected="' + active + '">' +
-          '<svg class="gtab__ico" aria-hidden="true"><use href="#i-' + esc(c.icon) + '"/></svg>' +
-          '<span>' + esc(c.label) + '</span>' +
-        '</button>';
-      }).join("");
-    }
-
-    function renderGrid() {
-      var c = current();
-      gridEl.innerHTML = c.photos.map(function (src, i) {
-        return '' +
-        '<button type="button" class="gtile" data-idx="' + i + '" aria-label="Lihat foto ' + (i + 1) + ' — ' + esc(c.label) + '">' +
-          '<img data-src="' + esc(src) + '" alt="Prewedding ' + esc(c.label) + ' ' + (i + 1) + '">' +
-          '<span class="gtile__ph"><svg aria-hidden="true"><use href="#i-' + esc(c.icon) + '"/></svg><em>Segera Hadir</em></span>' +
-        '</button>';
-      }).join("");
-      $$(".gtile img", gridEl).forEach(function (img) {
-        img.loading = "lazy";
-        img.onload  = function () { img.closest(".gtile").classList.add("is-ready"); };
-        img.onerror = function () { img.closest(".gtile").classList.add("is-empty"); img.remove(); };
-        img.src = img.dataset.src;
+    var marqueeEl = $("#galleryGrid");
+    var row1 = $("#galleryRow1"), row2 = $("#galleryRow2");
+    var photos = [];
+    G.concepts.forEach(function (c) {
+      c.photos.forEach(function (src, i) {
+        photos.push({ src: src, icon: c.icon, label: c.label, n: i + 1 });
       });
-    }
-
-    tabsEl.addEventListener("click", function (e) {
-      var b = e.target.closest("[data-concept]");
-      if (!b || b.dataset.concept === activeKey) return;
-      activeKey = b.dataset.concept;
-      renderTabs(); renderGrid();
     });
 
-    renderTabs(); renderGrid();
+    var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    function tileHTML(p, i) {
+      return '' +
+      '<button type="button" class="gtile" data-idx="' + i + '" aria-label="Lihat foto ' + (i + 1) + ' — ' + esc(p.label) + '">' +
+        '<img data-src="' + esc(p.src) + '" alt="' + esc(p.label) + ' ' + p.n + '">' +
+        '<span class="gtile__ph"><svg aria-hidden="true"><use href="#i-' + esc(p.icon) + '"/></svg><em>Segera Hadir</em></span>' +
+      '</button>';
+    }
+
+    function fillRow(trackEl, idxList) {
+      var html = idxList.map(function (i) { return tileHTML(photos[i], i); }).join("");
+      trackEl.innerHTML = reduceMotion ? html : html + html; // duplicate for seamless loop
+      if (reduceMotion) trackEl.parentElement.classList.add("is-manual");
+    }
+
+    var idxA = [], idxB = [];
+    photos.forEach(function (p, i) { (i % 2 === 0 ? idxA : idxB).push(i); });
+    fillRow(row1, idxA);
+    fillRow(row2, idxB);
+
+    $$(".gtile img", marqueeEl).forEach(function (img) {
+      img.loading = "lazy";
+      img.onload  = function () { img.closest(".gtile").classList.add("is-ready"); };
+      img.onerror = function () { img.closest(".gtile").classList.add("is-empty"); img.remove(); };
+      img.src = img.dataset.src;
+    });
+
+    if (!reduceMotion) {
+      // Speed is constant px/sec regardless of photo count, so the
+      // motion always reads as slow and "halus" (smooth), not rushed.
+      var PX_PER_SEC = 26;
+      [row1, row2].forEach(function (track) {
+        var setWidth = track.scrollWidth / 2;
+        track.style.animationDuration = (setWidth / PX_PER_SEC) + "s";
+      });
+    }
 
     // ---- Lightbox ----
     var lb = $("#lightbox"), lbImg = $("#lightboxImg"), lbCap = $("#lightboxCaption");
     var lbIdx = 0;
 
     function updateLightbox() {
-      var c = current();
-      lbImg.src = c.photos[lbIdx];
-      lbImg.alt = "Prewedding " + c.label + " " + (lbIdx + 1);
-      lbCap.textContent = c.label + " · " + (lbIdx + 1) + " / " + c.photos.length;
+      var p = photos[lbIdx];
+      lbImg.src = p.src;
+      lbImg.alt = p.label + " " + p.n;
+      lbCap.textContent = p.label + " · " + (lbIdx + 1) + " / " + photos.length;
     }
     function openLightbox(i) {
       lbIdx = i;
@@ -165,12 +171,11 @@
       document.body.classList.remove("is-locked");
     }
     function step(dir) {
-      var c = current();
-      lbIdx = (lbIdx + dir + c.photos.length) % c.photos.length;
+      lbIdx = (lbIdx + dir + photos.length) % photos.length;
       updateLightbox();
     }
 
-    gridEl.addEventListener("click", function (e) {
+    marqueeEl.addEventListener("click", function (e) {
       var t = e.target.closest(".gtile");
       if (!t || t.classList.contains("is-empty")) return;
       openLightbox(parseInt(t.dataset.idx, 10));

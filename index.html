@@ -20,18 +20,6 @@
 <!-- ============ SVG SPRITE (botanical ornaments + icons) ============ -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
-    <symbol id="i-sprig" viewBox="0 0 120 40">
-      <path d="M4 20h112" stroke="currentColor" stroke-width=".8" fill="none" opacity=".55"/>
-      <g fill="currentColor" opacity=".85">
-        <ellipse cx="60" cy="20" rx="4.5" ry="8.5"/>
-        <ellipse cx="48" cy="15" rx="7" ry="3.4" transform="rotate(-18 48 15)"/>
-        <ellipse cx="48" cy="25" rx="7" ry="3.4" transform="rotate(18 48 25)"/>
-        <ellipse cx="72" cy="15" rx="7" ry="3.4" transform="rotate(18 72 15)"/>
-        <ellipse cx="72" cy="25" rx="7" ry="3.4" transform="rotate(-18 72 25)"/>
-        <ellipse cx="36" cy="20" rx="5" ry="2.6"/>
-        <ellipse cx="84" cy="20" rx="5" ry="2.6"/>
-      </g>
-    </symbol>
     <symbol id="i-leafcorner" viewBox="0 0 200 200">
       <g fill="none" stroke="currentColor" stroke-width="1.1" stroke-linecap="round">
         <path d="M6 194C6 108 62 34 150 8"/>
@@ -90,7 +78,7 @@
         <p class="eyebrow">Bismillahirrahmanirrahim</p>
         <h2 class="sec__title">Assalamu'alaikum Wr. Wb.</h2>
         <p class="sec__lede">Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud menyelenggarakan pernikahan putra-putri kami:</p>
-        <svg class="divider" aria-hidden="true"><use href="#i-sprig"/></svg>
+        <img class="divider" src="assets/img/divider.png" alt="">
       </header>
 
       <article class="person reveal" id="personBride">
@@ -117,17 +105,19 @@
     </div>
   </section>
 
-  <!-- PREWEDDING GALLERY -->
+  <!-- GALLERY -->
   <section class="sec sec--gallery" id="sec-gallery">
     <div class="wrap">
       <header class="sec__head reveal">
-        <p class="eyebrow">Prewedding</p>
+        <p class="eyebrow">Gallery</p>
         <h2 class="sec__title" id="galleryTitle"></h2>
         <p class="sec__lede" id="galleryIntro"></p>
-        <svg class="divider" aria-hidden="true"><use href="#i-sprig"/></svg>
+        <img class="divider" src="assets/img/divider.png" alt="">
       </header>
-      <div class="gallery-tabs reveal" id="galleryTabs" role="tablist" aria-label="Konsep prewedding"></div>
-      <div class="gallery-grid reveal" id="galleryGrid"></div>
+    </div>
+    <div class="gallery-marquee reveal" id="galleryGrid">
+      <div class="gallery-row"><div class="gallery-track" id="galleryRow1"></div></div>
+      <div class="gallery-row"><div class="gallery-track gallery-track--rev" id="galleryRow2"></div></div>
     </div>
   </section>
 
@@ -156,7 +146,7 @@
       <header class="sec__head reveal">
         <p class="eyebrow">Save The Date</p>
         <h2 class="sec__title">Rangkaian Acara</h2>
-        <svg class="divider" aria-hidden="true"><use href="#i-sprig"/></svg>
+        <img class="divider" src="assets/img/divider.png" alt="">
       </header>
       <div class="events" id="eventsList"></div>
     </div>
@@ -187,7 +177,7 @@
         <p class="eyebrow">RSVP</p>
         <h2 class="sec__title">Konfirmasi Kehadiran</h2>
         <p class="sec__lede">Mohon konfirmasi kehadiran Anda dan tinggalkan pesan untuk kedua mempelai.</p>
-        <svg class="divider" aria-hidden="true"><use href="#i-sprig"/></svg>
+        <img class="divider" src="assets/img/divider.png" alt="">
       </header>
 
       <form class="form reveal" id="rsvpForm" novalidate>
@@ -239,7 +229,7 @@
         <p class="eyebrow">Ucapan &amp; Doa</p>
         <h2 class="sec__title">Wedding Wishes</h2>
         <p class="sec__lede"><span id="wishCount">0</span> ucapan telah dikirim</p>
-        <svg class="divider" aria-hidden="true"><use href="#i-sprig"/></svg>
+        <img class="divider" src="assets/img/divider.png" alt="">
       </header>
       <div class="wishes" id="wishesList" aria-live="polite">
         <div class="wishes__empty" id="wishesEmpty">
@@ -273,7 +263,7 @@
       <p class="closing__salam">Wassalamu'alaikum Wr. Wb.</p>
       <p class="closing__signoff" id="closingSignoff"></p>
       <h2 class="closing__names" id="closingNames"></h2>
-      <svg class="divider divider--light" aria-hidden="true"><use href="#i-sprig"/></svg>
+      <img class="divider divider--light" src="assets/img/divider-light.png" alt="">
       <p class="closing__families" id="closingFamilies"></p>
     </div>
     <footer class="foot">
