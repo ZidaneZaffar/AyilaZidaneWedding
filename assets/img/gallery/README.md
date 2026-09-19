@@ -3,9 +3,10 @@
 Drop your prewedding photos here using these filenames. The website reads
 the lists from `config.js ▸ gallery.concepts[].photos` (portrait, the top
 two auto-scrolling rows) and `config.js ▸ gallery.concepts[].landscape`
-(the wider row at the bottom) — any file that isn't here yet just shows a
-"Segera Hadir" placeholder tile, so you can add them whenever they're ready
-without touching any code.
+(a separate section further down, after the gift section) — the site
+checks each path when the page loads and silently skips any that aren't
+uploaded yet, no placeholder tile and no reserved empty slot, so the row
+just shows exactly however many photos actually exist right now.
 
 ```
 Portrait (top two rows):

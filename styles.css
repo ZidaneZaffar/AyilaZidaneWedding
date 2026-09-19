@@ -268,16 +268,7 @@ body::after{
   opacity:0; transition:opacity .6s var(--ease), transform .6s var(--ease);
 }
 .gtile.is-ready img{opacity:1}
-@media (hover:hover){ .gtile:not(.is-empty):hover img{transform:scale(1.07)} }
-.gtile__ph{
-  position:absolute; inset:0; display:grid; place-items:center; gap:7px;
-  background:linear-gradient(160deg,var(--ivory-3),var(--ivory-2)); color:var(--sage);
-  opacity:1; transition:opacity .4s var(--ease); text-align:center; padding:10px;
-}
-.gtile.is-ready .gtile__ph{opacity:0; pointer-events:none}
-.gtile__ph svg{width:24px; height:24px; margin:0 auto}
-.gtile__ph em{display:block; font-style:normal; font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted)}
-.gtile.is-empty{cursor:default}
+@media (hover:hover){ .gtile:hover img{transform:scale(1.07)} }
 
 .gtile--ls{width:210px; aspect-ratio:3/2}
 
