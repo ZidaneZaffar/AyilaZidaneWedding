@@ -204,7 +204,13 @@ body::after{
 }
 
 /* ---------- COUPLE ---------- */
-.sec--couple{background:var(--ivory); text-align:center}
+.sec--couple{background:var(--ivory); text-align:center; overflow:hidden}
+.sec--couple::before{
+  content:""; position:absolute; inset:0; z-index:0;
+  background:url("assets/img/bg-venue.jpg") center/cover no-repeat;
+  opacity:.22; pointer-events:none;
+}
+.sec--couple .wrap{position:relative; z-index:1}
 .person{margin:0 auto; max-width:400px}
 .person__portrait{
   width:170px; height:214px; margin:0 auto 22px;
@@ -334,7 +340,13 @@ body::after{
 .count__done{margin-top:22px; font-family:var(--f-display); font-style:italic; font-size:18px; color:var(--gold-l)}
 
 /* ---------- EVENTS ---------- */
-.sec--events{background:linear-gradient(180deg,var(--ivory),var(--ivory-2))}
+.sec--events{background:linear-gradient(180deg,var(--ivory),var(--ivory-2)); overflow:hidden}
+.sec--events::before{
+  content:""; position:absolute; inset:0; z-index:0;
+  background:url("assets/img/bg-venue.jpg") center/cover no-repeat;
+  opacity:.22; pointer-events:none;
+}
+.sec--events .wrap{position:relative; z-index:1}
 .events{display:grid; gap:16px}
 .event{
   background:var(--paper); border:1px solid var(--line); border-radius:var(--r);
