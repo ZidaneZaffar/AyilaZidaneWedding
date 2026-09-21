@@ -26,6 +26,7 @@
   --f-display:"Cormorant Garamond", "Iowan Old Style", Georgia, serif;
   --f-script:"Pinyon Script", "Cormorant Garamond", cursive;
   --f-sans:"Jost", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --f-serif:"Lora", "Times New Roman", Times, serif;
 
   --wrap:min(560px, 100% - 44px);
   --wrap-narrow:min(480px, 100% - 44px);
@@ -176,19 +177,25 @@ body::after{
   padding:0 22px calc(env(safe-area-inset-bottom) + 36px);
   text-align:center;
 }
-.cover__guest{margin:0 auto 20px}
-.cover__guest-name{
-  /* Styled as a distinct "written in" touch rather than a label, since
-     the photo itself already prints the generic honorific — this reads
-     as a continuation of it, not a repeat. */
-  margin:0; font-family:var(--f-script); font-size:32px; font-weight:400;
-  color:var(--gold-l); line-height:1.2;
+.cover__top{
+  position:absolute; z-index:2; left:0; right:0;
+  top:calc(env(safe-area-inset-top) + 30px);
+  padding:0 28px; text-align:center; pointer-events:none;
+}
+.cover__dear{
+  margin:0; font-family:var(--f-serif); font-size:17px; font-weight:500;
+  color:var(--ink); text-shadow:0 1px 10px rgba(243,242,233,.6);
+}
+.cover__dear #guestName{color:var(--gold)}
+.cover__invite{
+  margin:5px 0 0; font-family:var(--f-serif); font-style:italic; font-size:15px;
+  color:var(--ink-2); text-shadow:0 1px 10px rgba(243,242,233,.6);
 }
 .cover.is-open{opacity:0; transform:scale(1.08); pointer-events:none}
 
 /* cover entrance */
-.cv-d,.cv-e{opacity:0; transform:translateY(16px); animation:rise .95s var(--ease) forwards}
-.cv-d{animation-delay:.5s} .cv-e{animation-delay:.75s}
+.cv-c,.cv-d,.cv-e{opacity:0; transform:translateY(16px); animation:rise .95s var(--ease) forwards}
+.cv-c{animation-delay:.3s} .cv-d{animation-delay:.5s} .cv-e{animation-delay:.75s}
 @keyframes rise{to{opacity:1; transform:none}}
 
 /* ============ INVITATION ============ */
