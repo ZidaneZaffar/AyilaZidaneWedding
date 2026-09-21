@@ -10,7 +10,7 @@ window.WEDDING_CONFIG = {
   /* ---------- 1. COUPLE ---------- */
   couple: {
     groom: {
-      fullName:  "M Zidane Zaffar",
+      fullName:  "Muhammad Zidane Zaffar",
       shortName: "Zidane",
       order:     "Putra dari",              // "Son of"
       father:    "Sabar Sundarelawan",
@@ -129,7 +129,7 @@ window.WEDDING_CONFIG = {
     // Calendar event spans from Akad start to Resepsi end.
     startISO:    "2026-10-24T14:00:00+07:00",
     endISO:      "2026-10-24T21:00:00+07:00",
-    description: "Dengan penuh sukacita kami mengundang Anda ke pernikahan Ayila Adzkiya Sucahyo & M Zidane Zaffar.\\n\\nAkad Nikah : 14.00 - 16.00 WIB\\nResepsi : 19.00 - 21.00 WIB"
+    description: "Dengan penuh sukacita kami mengundang Anda ke pernikahan Ayila Adzkiya Sucahyo & Muhammad Zidane Zaffar.\\n\\nAkad Nikah : 14.00 - 16.00 WIB\\nResepsi : 19.00 - 21.00 WIB"
   },
 
   /* ---------- 8. GIFT ----------
@@ -140,8 +140,8 @@ window.WEDDING_CONFIG = {
     accounts: [
       {
         bank:   "BCA",                  // e.g. "BCA"
-        number: "8691854035",                 // e.g. "1234567890"
-        holder: "M Zidane Zaffar",
+        number: "0710142394",                 // e.g. "1234567890"
+        holder: "Ayila Adzkiya Sucahyo",
         logo:   ""                            // optional: "assets/img/bca.png"
       }
       // Add a second account by copying the block above:
@@ -149,7 +149,8 @@ window.WEDDING_CONFIG = {
     ],
     // Optional — leave image: "" to hide this card entirely.
     qris: {
-      image: "assets/img/qris.jpg"
+      image: "assets/img/qris.jpg",
+      holder: "Zaffar Studio"
     },
     // Optional — leave url: "" to hide this card entirely.
     registry: {
@@ -159,7 +160,7 @@ window.WEDDING_CONFIG = {
     address: {
       label: "Kirim Hadiah",
       value: "Pesona Sanfrancisco Q2/21 Kota Wisata, Ciangsana, Kec. Gn. Putri, Kabupaten Bogor, Jawa Barat 16968",
-      recipient: "M Zidane Zaffar",
+      recipient: "Muhammad Zidane Zaffar",
       phone: ""                               // optional, e.g. "+62 812-0000-0000"
     }
   },
