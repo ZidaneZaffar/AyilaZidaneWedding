@@ -163,7 +163,15 @@ body::after{
 }
 .cover__bg img{
   position:absolute; inset:0; width:100%; height:100%;
-  object-fit:cover; object-position:center;
+  object-fit:cover; object-position:top center;
+  /* Anchored to the top (not centered) so any vertical cropping only
+     ever eats into the courtyard/bottom of the photo. Centering would
+     crop symmetrically top+bottom depending on the device's aspect
+     ratio, which on a shorter viewport (e.g. an in-app browser with
+     its own address bar) pushes the photo's own baked-in "The wedding
+     of" text upward -- straight into the "Dear, .../We invite you to"
+     overlay above it. Anchoring the top keeps that gap constant on
+     every device. */
   opacity:0; transition:opacity 1s var(--ease); animation:coverZoom 24s ease-in-out infinite alternate;
 }
 .cover__bg img.is-ready{opacity:1}
