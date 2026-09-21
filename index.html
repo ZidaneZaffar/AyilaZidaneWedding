@@ -46,6 +46,9 @@
     <symbol id="i-museum" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 12 3l9 6"/><path d="M3.5 9.5h17v2h-17z"/><path d="M5.5 11.5v8M9.5 11.5v8M12 11.5v8M14.5 11.5v8M18.5 11.5v8"/><path d="M3 20.5h18"/></g></symbol>
     <symbol id="i-close" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5 5 19" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" fill="none"/></symbol>
     <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M15 5 8 12l7 7" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M6 10a6 6 0 0 1 12 0c0 4.2 1.4 6 2 6.6H4c.6-.6 2-2.4 2-6.6z"/><path d="M10 19.5a2 2 0 0 0 4 0"/></g></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5v-3a4 4 0 0 1 8 0v3"/></g></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M4.5 12.5 9.5 17.5 19.5 6.5" stroke="currentColor" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></symbol>
   </defs>
 </svg>
 
@@ -265,6 +268,33 @@
   <span class="music__ring" aria-hidden="true"></span>
 </button>
 <audio id="audio" loop preload="auto"></audio>
+
+<!-- HIDDEN SECRETS (easter eggs) -->
+<button type="button" class="eggs-bell" id="eggsBell" hidden aria-label="Rahasia">
+  <svg class="eggs-bell__ico" aria-hidden="true"><use href="#i-bell"/></svg>
+  <span class="eggs-bell__badge" id="eggsBadge">0/0</span>
+</button>
+
+<div class="eggs-modal" id="eggsModal" aria-hidden="true">
+  <button type="button" class="lightbox__close" id="eggsModalClose" aria-label="Tutup">
+    <svg aria-hidden="true"><use href="#i-close"/></svg>
+  </button>
+  <div class="eggs-modal__card">
+    <div id="eggsListView">
+      <p class="eyebrow">Rahasia</p>
+      <h3 class="sec__title" id="eggsListTitle">Temukan Semua Rahasia</h3>
+      <p class="eggs-modal__intro" id="eggsIntro"></p>
+      <div class="eggs-list" id="eggsList"></div>
+    </div>
+    <div id="eggsRevealView" hidden>
+      <p class="eyebrow" id="eggsRevealEyebrow">Rahasia Ditemukan</p>
+      <h3 class="sec__title" id="eggsRevealTitle"></h3>
+      <img class="eggs-modal__img" id="eggsRevealImg" alt="" hidden>
+      <p class="eggs-modal__text" id="eggsRevealText"></p>
+      <button type="button" class="btn btn--sm" id="eggsBackBtn">← Kembali ke daftar</button>
+    </div>
+  </div>
+</div>
 
 <!-- PREWEDDING LIGHTBOX -->
 <div class="lightbox" id="lightbox" aria-hidden="true">

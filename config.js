@@ -189,7 +189,75 @@ window.WEDDING_CONFIG = {
     autoplay: true          // starts after the guest taps "Open Invitation"
   },
 
-  /* ---------- 12. META / SHARING ---------- */
+  /* ---------- 12. HIDDEN SECRETS (easter eggs, optional) ----------
+     A little hidden game for guests: find all of the secrets below,
+     each tied to a real fact about you two, by doing the matching
+     interaction somewhere on the site. A bell button (top-right)
+     lets guests see their progress and hints, and re-read anything
+     they've already found. Once every secret is found, `finalText`
+     is revealed instead -- e.g. a keyword for a Kahoot quiz at the
+     reception.
+
+     `trigger` picks which interaction unlocks that item -- the
+     interaction itself is fixed in app.js, only which fact goes with
+     which trigger is up to you here. One item per trigger:
+       coupleTap     tap either mempelai's name (in the couple
+                     section) 5 times in a row
+       portraitHold  press and hold a mempelai's photo for ~1.2s
+       countdownTap  tap a countdown number 3 times in a row
+       galleryPhotos open 5 different photos in the gallery lightbox
+       keyword       type a secret word anywhere on the page
+                     (needs `keyword` set below, case-insensitive)
+       closingTap    tap the names at the very bottom of the page
+                     5 times in a row
+     `image` is optional -- leave "" to show text only.
+     Leave `enabled: false` to turn the whole feature off.        */
+  eggs: {
+    enabled: true,
+    intro: "Ada beberapa rahasia kecil tersembunyi di undangan ini. Temukan semuanya sebelum hari H!",
+    finalTitle: "Kamu menemukan semua rahasia!",
+    finalText: "Simpan baik-baik semua fakta tadi — bakal muncul lagi di sesi Kahoot waktu resepsi!",
+    items: [
+      {
+        trigger: "portraitHold",
+        title: "Cincin Pertama",
+        hint: "Tekan dan tahan salah satu foto mempelai selama 1-2 detik.",
+        text: "Ayila dikasih cincin pertama kali di Museum Nasional.",
+        image: ""
+      },
+      {
+        trigger: "coupleTap",
+        title: "Almamater",
+        hint: "Ketuk nama salah satu mempelai 5 kali berturut-turut.",
+        text: "Ayila & Zidane sama-sama lulus dari Fakultas Ilmu Komputer UI — angkatan Ayila adalah Quanta, angkatan Zidane adalah Omega.",
+        image: ""
+      },
+      {
+        trigger: "countdownTap",
+        title: "Olahraga Pertama",
+        hint: "Ketuk salah satu angka hitung mundur 3 kali.",
+        text: "Olahraga pertama yang kita lakukan bersama adalah bouldering / panjat tebing.",
+        image: ""
+      },
+      {
+        trigger: "galleryPhotos",
+        title: "Jarak Rumah",
+        hint: "Buka 5 foto berbeda di galeri \"Our Moments\".",
+        text: "Jarak rumah Zidane di Kota Wisata dan rumah Ayila di Cilandak adalah 35.7 km.",
+        image: ""
+      },
+      {
+        trigger: "keyword",
+        keyword: "lantern",
+        title: "Series Favorit",
+        hint: "Ketik judul series yang lagi kita tonton bareng saat ini, di mana saja di halaman ini.",
+        text: "Series yang lagi kita tonton bareng saat ini adalah Lantern.",
+        image: ""
+      }
+    ]
+  },
+
+  /* ---------- 13. META / SHARING ---------- */
   meta: {
     siteTitle:   "Ayila & Zidane — Wedding Invitation",
     description: "24 Oktober 2026 · ARTOTEL Living World Kota Wisata",
