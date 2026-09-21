@@ -658,12 +658,23 @@ textarea{resize:vertical; min-height:110px; line-height:1.7}
   .count{max-width:460px; gap:12px}
   .count__cell{padding:22px 6px 16px}
   .music{right:26px; bottom:26px; width:54px; height:54px}
+  /* The two big photo cards go side by side starting here too --
+     otherwise a browser window between 700-999px wide (a very
+     ordinary desktop size) still gets the single-column phone
+     layout: one narrow ~400px card stacked above the other, adrift
+     in a much wider page. Widened just for this section (not the
+     shared --wrap var) since it needs more room than everything
+     else does at this breakpoint. */
+  .sec--couple .wrap{
+    width:min(700px, 100% - 48px);
+    display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:20px;
+  }
+  .sec--couple .sec__head{grid-column:1/-1}
+  .amp-big{margin:0}
 }
 @media (min-width:1000px){
   :root{--wrap:min(880px, 100% - 80px); --wrap-narrow:min(620px, 100% - 80px)}
-  .sec--couple .wrap{display:grid; grid-template-columns:1fr auto 1fr; align-items:center; gap:24px}
-  .sec--couple .sec__head{grid-column:1/-1}
-  .amp-big{margin:0}
+  .sec--couple .wrap{width:var(--wrap); gap:24px}
 }
 
 /* honor a device dark preference without abandoning the palette */

@@ -40,16 +40,18 @@ window.WEDDING_CONFIG = {
   },
 
   /* ---------- 3. GALLERY ----------
-     One mixed list, in whatever order you want them to appear -- no
-     need to group by shoot/concept, and no need to say which photos
-     are portrait vs. landscape either: the site reads each photo's
-     real dimensions and sizes its tile automatically. To add a new
-     photo: drop the file into assets/img/gallery/ and add its path
-     as a new line below, that's it. The photo count is dynamic: the
-     site probes each path at load and silently drops any that
-     aren't there yet, so you can also list a photo before you've
-     uploaded it -- no placeholder tile, no reserved empty slot, it
-     just appears once the file exists.                            */
+     Fully hands-off: drop any photo (any filename, no naming
+     convention) into assets/img/gallery/ and it just appears in the
+     "Our Moments" gallery after the next deploy -- nothing to edit
+     here. The list is auto-generated at deploy time by
+     tools/generate-gallery-manifest.py from whatever's actually in
+     that folder (see .github/workflows/deploy.yml); it also reads
+     each photo's real dimensions to size portrait vs. landscape
+     tiles automatically.
+
+     `photos` below is only a fallback, used if that generated
+     manifest can't be fetched for some reason -- you don't need to
+     touch it for normal use.                                     */
   gallery: {
     heading: "Our Moments",
     photos: [

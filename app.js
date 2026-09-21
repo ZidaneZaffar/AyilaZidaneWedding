@@ -101,25 +101,35 @@
      --------------------------------------------------------- */
   (function gallery() {
     var G = C.gallery;
-    if (!G || !Array.isArray(G.photos) || !G.photos.length) {
-      var sec = $("#sec-gallery"); if (sec) sec.remove();
-      return;
-    }
+    if (!G) return;
 
     $("#galleryTitle").textContent = G.heading || "Gallery";
 
     var galleryGrid = $("#galleryGrid");
     var row1 = $("#galleryRow1"), row2 = $("#galleryRow2");
 
-    // One mixed list, no per-shoot grouping -- adding a new photo is
-    // just one more line in config.js. The photo count is dynamic,
-    // not a fixed layout of slots: a path listed but not yet
-    // uploaded is dropped entirely rather than reserved as an empty/
-    // placeholder tile. That means we can't build the rows straight
-    // from config -- we have to probe each URL first (which also
-    // tells us its natural width/height, so landscape vs. portrait
-    // tiles can size themselves automatically -- nothing to declare
-    // in config, it's read straight off the image itself).
+    // The photo list itself is auto-generated (see
+    // tools/generate-gallery-manifest.py, run on every deploy) by
+    // just listing whatever's actually in assets/img/gallery/ -- no
+    // filename convention, and nothing to add to config.js. That
+    // manifest is fetched here; config.js's own `photos` array (if
+    // any) is only a fallback for when the manifest can't be
+    // fetched, e.g. testing straight off disk without a local server.
+    function loadPhotoList() {
+      return fetch("assets/img/gallery/manifest.json", { cache: "no-store" })
+        .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+        .then(function (list) { return Array.isArray(list) && list.length ? list : (G.photos || []); })
+        .catch(function () { return G.photos || []; });
+    }
+
+    // One mixed list, no per-shoot grouping. The photo count is
+    // dynamic, not a fixed layout of slots: a listed path that isn't
+    // actually there (or fails to load) is dropped entirely rather
+    // than reserved as an empty/placeholder tile. That means we
+    // can't build the rows straight off the list -- we have to probe
+    // each URL first (which also tells us its natural width/height,
+    // so landscape vs. portrait tiles can size themselves
+    // automatically, nothing to declare anywhere).
     function probe(src) {
       return new Promise(function (resolve) {
         var img = new Image();
@@ -133,7 +143,11 @@
 
     var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    Promise.all(G.photos.map(probe)).then(function (results) {
+    loadPhotoList().then(function (photoList) {
+      if (!photoList.length) { var sec0 = $("#sec-gallery"); if (sec0) sec0.remove(); return; }
+      return Promise.all(photoList.map(probe));
+    }).then(function (results) {
+      if (!results) return; // gallery already removed above (empty list)
       var photos = results.filter(Boolean); // drop whatever failed to load -- no placeholder
       if (!photos.length) { var sec1 = $("#sec-gallery"); if (sec1) sec1.remove(); return; }
 
