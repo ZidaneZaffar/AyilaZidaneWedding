@@ -179,7 +179,7 @@ body::after{
 }
 .cover__top{
   position:absolute; z-index:2; left:0; right:0;
-  top:calc(env(safe-area-inset-top) + 30px);
+  top:calc(env(safe-area-inset-top) + 16px);
   padding:0 28px; text-align:center; pointer-events:none;
 }
 .cover__dear{
@@ -188,7 +188,7 @@ body::after{
 }
 .cover__dear #guestName{color:var(--gold)}
 .cover__invite{
-  margin:5px 0 0; font-family:var(--f-serif); font-style:italic; font-size:15px;
+  margin:1px 0 0; font-family:var(--f-serif); font-style:italic; font-size:15px;
   color:var(--ink-2); text-shadow:0 1px 10px rgba(243,242,233,.6);
 }
 .cover.is-open{opacity:0; transform:scale(1.08); pointer-events:none}
