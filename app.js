@@ -116,12 +116,16 @@
     // not a fixed layout of slots: a path listed but not yet
     // uploaded is dropped entirely rather than reserved as an empty/
     // placeholder tile. That means we can't build the rows straight
-    // from config -- we have to probe each URL first and keep only
-    // the ones that load.
+    // from config -- we have to probe each URL first (which also
+    // tells us its natural width/height, so landscape vs. portrait
+    // tiles can size themselves automatically -- nothing to declare
+    // in config, it's read straight off the image itself).
     function probe(src) {
       return new Promise(function (resolve) {
         var img = new Image();
-        img.onload = function () { resolve(src); };
+        img.onload = function () {
+          resolve({ src: src, ls: img.naturalWidth > img.naturalHeight });
+        };
         img.onerror = function () { resolve(null); };
         img.src = src;
       });
@@ -134,12 +138,12 @@
       if (!photos.length) { var sec1 = $("#sec-gallery"); if (sec1) sec1.remove(); return; }
 
       var idxA = [], idxB = [];
-      photos.forEach(function (src, i) { (i % 2 === 0 ? idxA : idxB).push(i); });
+      photos.forEach(function (p, i) { (i % 2 === 0 ? idxA : idxB).push(i); });
 
-      function tileHTML(src, i) {
+      function tileHTML(p, i) {
         return '' +
-        '<button type="button" class="gtile" data-idx="' + i + '" aria-label="Lihat foto ' + (i + 1) + '">' +
-          '<img src="' + esc(src) + '" alt="' + esc(G.heading || "Foto") + ' ' + (i + 1) + '">' +
+        '<button type="button" class="gtile' + (p.ls ? " gtile--ls" : "") + '" data-idx="' + i + '" aria-label="Lihat foto ' + (i + 1) + '">' +
+          '<img src="' + esc(p.src) + '" alt="' + esc(G.heading || "Foto") + ' ' + (i + 1) + '">' +
         '</button>';
       }
 
@@ -217,7 +221,7 @@
       var lbIdx = 0;
 
       function updateLightbox() {
-        lbImg.src = photos[lbIdx];
+        lbImg.src = photos[lbIdx].src;
         lbImg.alt = (G.heading || "Foto") + " " + (lbIdx + 1);
         lbCap.textContent = (G.heading || "Foto") + " · " + (lbIdx + 1) + " / " + photos.length;
       }

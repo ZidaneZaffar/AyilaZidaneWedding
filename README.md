@@ -17,7 +17,7 @@ A mobile-first, single-page wedding invitation with live RSVP, a real-time wishe
 ├── tools/link-generator.html     make personalised links per guest
 ├── tools/optimize-images.py      shrink oversized photos before they ship
 ├── assets/img/                   photos (cover.jpg, groom.jpg, bride.jpg, og-cover.jpg)
-├── assets/img/gallery/           "Our Moment" gallery photos
+├── assets/img/gallery/           "Our Moments" gallery photos
 ├── assets/audio/                 song.mp3
 ├── .github/workflows/deploy.yml  auto-deploy to GitHub Pages
 ├── .nojekyll                     stops Pages from mangling the files
@@ -136,7 +136,7 @@ The guest's name then appears under *"Kepada Yth."* on the cover and pre-fills t
 | Add photos | drop `bride.jpg` / `groom.jpg` into `assets/img/` — full-size camera photos are fine, see "Uploading full-size photos" below |
 | Add the cover photo | drop `cover.jpg` into `assets/img/` — leave `config.js ▸ cover.photo` empty to use a plain gradient instead. The current photo already has the title/names/date/honorific designed into it, so the site only overlays a personalised guest name (from `?to=`) and the "Buka Undangan" button on top — a photo without that text baked in would need those brought back into the HTML/CSS |
 | Add a gallery photo | drop the file into `assets/img/gallery/` and add its path as a new line in `config.js ▸ gallery.photos` — see `assets/img/gallery/README.md`. One flat mixed list, no grouping by shoot. The photo count is dynamic: anything not uploaded yet is just skipped, no placeholder tile |
-| Change the gallery heading | `config.js ▸ gallery.heading` (defaults to "Our Moment") |
+| Change the gallery heading | `config.js ▸ gallery.heading` (defaults to "Our Moments") |
 | Add music | drop `song.mp3` into `assets/audio/` (under 4 MB). Set `music.src = ""` to hide the button |
 | Change the max guest count | `config.js ▸ rsvp.maxGuests` |
 | Cap a specific guest's pax to less than the site-wide max | give them `, <pax>` in `tools/link-generator.html`'s name list — see § 5 |
@@ -179,8 +179,8 @@ After any edit: `git add -A && git commit -m "update" && git push` — Pages red
 - [x] Separate "Save the Date" buttons for Akad and Resepsi
 - [x] All couple/family/venue data isolated in `config.js`
 - [x] Gift section — "Wanna give us some gifts?" with bank account, gift registry link, and delivery address, one-tap copy
-- [x] "Our Moment" gallery — one mixed photo list (no shoot/concept grouping), auto-scrolling rows with a dynamic photo count (no placeholders for photos not uploaded yet), and a lightbox
-- [x] Sections: cover · couple · countdown · events · maps · RSVP · wishes · gift · gallery ("Our Moment") · closing
+- [x] "Our Moments" gallery — one mixed photo list (no shoot/concept grouping), auto-scrolling rows with a dynamic photo count (no placeholders for photos not uploaded yet), and a lightbox
+- [x] Sections: cover · couple · countdown · events · maps · RSVP · wishes · gift · gallery ("Our Moments") · closing
 - [x] Elegant, modern, premium, mobile-first, responsive, smooth scrolling
 - [x] Fade-in scroll animations, floating music button, safe-area insets for iPhone
 - [x] Deployed via GitHub Pages, no build step, ~40 KB total

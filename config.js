@@ -41,15 +41,17 @@ window.WEDDING_CONFIG = {
 
   /* ---------- 3. GALLERY ----------
      One mixed list, in whatever order you want them to appear -- no
-     need to group by shoot/concept. To add a new photo: drop the
-     file into assets/img/gallery/ and add its path as a new line
-     below, that's it. The photo count is dynamic: the site probes
-     each path at load and silently drops any that aren't there yet,
-     so you can also list a photo before you've uploaded it -- no
-     placeholder tile, no reserved empty slot, it just appears once
-     the file exists.                                              */
+     need to group by shoot/concept, and no need to say which photos
+     are portrait vs. landscape either: the site reads each photo's
+     real dimensions and sizes its tile automatically. To add a new
+     photo: drop the file into assets/img/gallery/ and add its path
+     as a new line below, that's it. The photo count is dynamic: the
+     site probes each path at load and silently drops any that
+     aren't there yet, so you can also list a photo before you've
+     uploaded it -- no placeholder tile, no reserved empty slot, it
+     just appears once the file exists.                            */
   gallery: {
-    heading: "Our Moment",
+    heading: "Our Moments",
     photos: [
       "assets/img/gallery/tenis-1.jpg",
       "assets/img/gallery/tenis-2.jpg",
