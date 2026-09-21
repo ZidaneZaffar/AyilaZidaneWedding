@@ -245,11 +245,11 @@ body::after{
   font-family:var(--f-script); font-size:56px; color:var(--sage); line-height:1;
 }
 .person__name{
-  font-family:var(--f-display); font-weight:400; font-size:clamp(24px,6.6vw,30px);
+  font-family:var(--f-display); font-weight:600; font-size:clamp(24px,6.6vw,30px);
   margin:0 0 6px; line-height:1.25;
 }
-.person__order{margin:0 0 8px; font-size:13px; letter-spacing:.2em; text-transform:uppercase; color:var(--gold)}
-.person__parents{margin:0; color:var(--muted); font-size:15.5px; line-height:1.9}
+.person__order{margin:0 0 8px; font-size:13px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--gold)}
+.person__parents{margin:0; color:var(--muted); font-size:15.5px; font-weight:600; line-height:1.9}
 .person__parents .amp{color:var(--sage); font-family:var(--f-display); font-size:15px}
 .person__ig{
   display:inline-grid; place-items:center; width:38px; height:38px; margin-top:16px;
