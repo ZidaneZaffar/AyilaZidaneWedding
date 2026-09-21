@@ -227,35 +227,44 @@ body::after{
   transform:translateY(var(--bg-shift, 0px)); will-change:transform;
 }
 .sec--couple .wrap{position:relative; z-index:1}
-.person{margin:0 auto; max-width:400px}
-.person__portrait{
-  width:170px; height:214px; margin:0 auto 22px;
-  border-radius:999px 999px 999px 999px;
+.person{width:100%; margin:0 auto; max-width:400px}
+/* A large edge-to-edge photo card with the name/parents overlaid at
+   the bottom on a dark scrim, instead of a small portrait circle
+   with the text below it -- the same "big photo, text baked into
+   it" treatment as the cover screen, reused here for consistency. */
+.person__photo{
+  position:relative; width:100%; aspect-ratio:3/4; margin:0 auto;
+  border-radius:var(--r); overflow:hidden;
   background:linear-gradient(160deg,var(--ivory-3),var(--ivory-2));
-  border:1px solid var(--line);
-  display:grid; place-items:center; overflow:hidden;
-  box-shadow:var(--shadow-s); position:relative;
+  border:1px solid var(--line); box-shadow:var(--shadow-m);
 }
-.person__portrait::after{
-  content:""; position:absolute; inset:7px; border-radius:inherit;
-  border:1px solid rgba(157,120,109,.35); pointer-events:none;
-}
-.person__portrait img{width:100%; height:100%; object-fit:cover}
+.person__photo img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover}
 .person__mono{
-  font-family:var(--f-script); font-size:56px; color:var(--sage); line-height:1;
+  position:absolute; inset:0; z-index:0; display:grid; place-items:center;
+  font-family:var(--f-script); font-size:76px; color:var(--sage); line-height:1;
+}
+.person__scrim{
+  position:absolute; inset:0; z-index:1; pointer-events:none;
+  background:linear-gradient(180deg, transparent 42%, rgba(20,24,14,.55) 76%, rgba(20,24,14,.82) 100%);
+}
+.person__info{
+  position:absolute; z-index:2; left:0; right:0; bottom:0;
+  padding:22px 20px 24px; text-align:center;
 }
 .person__name{
   font-family:var(--f-display); font-weight:600; font-size:clamp(24px,6.6vw,30px);
-  margin:0 0 6px; line-height:1.25;
+  margin:0 0 6px; line-height:1.25; color:var(--paper);
 }
-.person__order{margin:0 0 8px; font-size:13px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--gold)}
-.person__parents{margin:0; color:var(--muted); font-size:15.5px; font-weight:600; line-height:1.9}
-.person__parents .amp{color:var(--sage); font-family:var(--f-display); font-size:15px}
+.person__order{margin:0 0 8px; font-size:13px; font-weight:600; letter-spacing:.2em; text-transform:uppercase; color:var(--gold-l)}
+.person__parents{margin:0; color:rgba(243,242,233,.88); font-size:14.5px; font-weight:600; line-height:1.7}
+.person__parents .amp{color:var(--gold-l); font-family:var(--f-display); font-size:14px; margin:0 6px}
 .person__ig{
-  display:inline-grid; place-items:center; width:38px; height:38px; margin-top:16px;
-  border:1px solid var(--line); border-radius:50%; color:var(--sage-d);
+  position:absolute; z-index:2; top:14px; right:14px;
+  display:inline-grid; place-items:center; width:36px; height:36px;
+  border:1px solid rgba(243,242,233,.4); border-radius:50%; color:var(--paper);
+  background:rgba(20,24,14,.32); backdrop-filter:blur(4px);
 }
-.person__ig svg{width:17px; height:17px}
+.person__ig svg{width:16px; height:16px}
 .amp-big{
   font-family:var(--f-script); font-size:64px; color:var(--gold);
   line-height:1; margin:34px 0; opacity:.9;

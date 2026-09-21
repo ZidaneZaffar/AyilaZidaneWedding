@@ -565,7 +565,7 @@
 
     var iPortraitHold = findItemIndex("portraitHold");
     if (iPortraitHold > -1) {
-      $$(".person__portrait").forEach(function (el) {
+      $$(".person__photo").forEach(function (el) {
         var t;
         // Only pointerup/pointercancel clear the timer -- not pointerleave,
         // since a finger drifting slightly off the element mid-hold (or a
