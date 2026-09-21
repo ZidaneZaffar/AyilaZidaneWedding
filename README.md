@@ -16,8 +16,9 @@ A mobile-first, single-page wedding invitation with live RSVP, a real-time wishe
 ├── apps-script/Code.gs           the Google Apps Script backend
 ├── tools/link-generator.html     make personalised links per guest
 ├── tools/optimize-images.py      shrink oversized photos before they ship
+├── tools/generate-gallery-manifest.py   auto-list gallery photos, no naming needed
 ├── assets/img/                   photos (cover.jpg, groom.jpg, bride.jpg, og-cover.jpg)
-├── assets/img/gallery/           "Our Moments" gallery photos
+├── assets/img/gallery/           "Our Moments" gallery photos — drop any file in, it just shows up
 ├── assets/audio/                 song.mp3
 ├── .github/workflows/deploy.yml  auto-deploy to GitHub Pages
 ├── .nojekyll                     stops Pages from mangling the files
@@ -102,6 +103,7 @@ Drop full-resolution camera photos straight into `assets/img/` or `assets/img/ga
 
 - **The live site is always optimized automatically.** `deploy.yml` runs `tools/optimize-images.py` on every deploy, which resizes and recompresses every photo (long edge capped at 2000px for `assets/img/`, 1600px for the gallery, since those only ever show as small tiles or in a ~560px lightbox) before it's published. The originals you committed are untouched in the repo — only the deployed copy is shrunk.
 - **Run it locally too if you want the committed file itself smaller** (faster clones, smaller diffs): `pip install pillow && python3 tools/optimize-images.py`.
+- **Anything dropped into `assets/img/gallery/` shows up automatically** — `deploy.yml` also runs `tools/generate-gallery-manifest.py`, which lists whatever's in that folder (any filename) and feeds it to the "Our Moments" gallery. No naming convention, no config.js edit.
 
 This is what took the gallery from ~65MB of raw photos down to ~2MB served to guests, with no visible quality loss at the sizes they're actually displayed.
 
@@ -154,7 +156,7 @@ Progress is saved per-device in `localStorage` — it doesn't sync across device
 | Add/change the gift registry link | `config.js ▸ gift.registry.url` — leave it `""` to hide that card entirely |
 | Add photos | drop `bride.jpg` / `groom.jpg` into `assets/img/` — full-size camera photos are fine, see "Uploading full-size photos" below |
 | Add the cover photo | drop `cover.jpg` into `assets/img/` — leave `config.js ▸ cover.photo` empty to use a plain gradient instead. The current photo already has the title/names/date/honorific designed into it, so the site only overlays a personalised guest name (from `?to=`) and the "Buka Undangan" button on top — a photo without that text baked in would need those brought back into the HTML/CSS |
-| Add a gallery photo | drop the file into `assets/img/gallery/` and add its path as a new line in `config.js ▸ gallery.photos` — see `assets/img/gallery/README.md`. One flat mixed list, no grouping by shoot. The photo count is dynamic: anything not uploaded yet is just skipped, no placeholder tile |
+| Add a gallery photo | drop the file into `assets/img/gallery/` — any filename, nothing to edit. It shows up on the next deploy (see `assets/img/gallery/README.md`) |
 | Change the gallery heading | `config.js ▸ gallery.heading` (defaults to "Our Moments") |
 | Add music | drop `song.mp3` into `assets/audio/` (under 4 MB). Set `music.src = ""` to hide the button |
 | Change the max guest count | `config.js ▸ rsvp.maxGuests` |
@@ -200,7 +202,7 @@ After any edit: `git add -A && git commit -m "update" && git push` — Pages red
 - [x] Separate "Save the Date" buttons for Akad and Resepsi
 - [x] All couple/family/venue data isolated in `config.js`
 - [x] Gift section — "Wanna give us some gifts?" with bank account, gift registry link, and delivery address, one-tap copy
-- [x] "Our Moments" gallery — one mixed photo list (no shoot/concept grouping), auto-scrolling rows with a dynamic photo count (no placeholders for photos not uploaded yet), and a lightbox
+- [x] "Our Moments" gallery — auto-discovers photos dropped into `assets/img/gallery/` (any filename), auto-scrolling rows, auto portrait/landscape tile sizing, and a lightbox
 - [x] Sections: cover · couple · countdown · events · maps · RSVP · wishes · gift · gallery ("Our Moments") · closing
 - [x] Elegant, modern, premium, mobile-first, responsive, smooth scrolling
 - [x] Fade-in scroll animations, floating music button, safe-area insets for iPhone

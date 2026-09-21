@@ -23,6 +23,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+      - name: Generate gallery manifest
+        run: python3 tools/generate-gallery-manifest.py
       - name: Optimize images
         run: |
           pip install --quiet pillow
