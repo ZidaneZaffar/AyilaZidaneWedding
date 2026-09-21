@@ -101,68 +101,49 @@
      --------------------------------------------------------- */
   (function gallery() {
     var G = C.gallery;
-    if (!G || !Array.isArray(G.concepts) || !G.concepts.length) {
+    if (!G || !Array.isArray(G.photos) || !G.photos.length) {
       var sec = $("#sec-gallery"); if (sec) sec.remove();
-      var secLS0 = $("#sec-gallery-ls"); if (secLS0) secLS0.remove();
       return;
     }
 
-    var galleryGrid = $("#galleryGrid"), galleryGridLS = $("#galleryGridLS");
-    var row1 = $("#galleryRow1"), row2 = $("#galleryRow2"), rowLS = $("#galleryRowLS");
+    $("#galleryTitle").textContent = G.heading || "Gallery";
 
-    // The photo count is dynamic, not a fixed layout of slots: a path
-    // listed in config.js that hasn't been uploaded yet is dropped
-    // entirely rather than reserved as an empty/placeholder tile, so
-    // every concept can grow or shrink independently with no gaps.
-    // That means we can't build the rows straight from config -- we
-    // have to probe each URL first and keep only the ones that load.
-    var allEntries = [];
-    G.concepts.forEach(function (c) {
-      (c.photos || []).forEach(function (src, i) {
-        allEntries.push({ src: src, label: c.label, n: i + 1, ls: false });
-      });
-    });
-    G.concepts.forEach(function (c) {
-      (c.landscape || []).forEach(function (src, i) {
-        allEntries.push({ src: src, label: c.label, n: i + 1, ls: true });
-      });
-    });
+    var galleryGrid = $("#galleryGrid");
+    var row1 = $("#galleryRow1"), row2 = $("#galleryRow2");
 
-    function probe(entry) {
+    // One mixed list, no per-shoot grouping -- adding a new photo is
+    // just one more line in config.js. The photo count is dynamic,
+    // not a fixed layout of slots: a path listed but not yet
+    // uploaded is dropped entirely rather than reserved as an empty/
+    // placeholder tile. That means we can't build the rows straight
+    // from config -- we have to probe each URL first (which also
+    // tells us its natural width/height, so landscape vs. portrait
+    // tiles can size themselves automatically -- nothing to declare
+    // in config, it's read straight off the image itself).
+    function probe(src) {
       return new Promise(function (resolve) {
         var img = new Image();
-        img.onload = function () { resolve(entry); };
+        img.onload = function () {
+          resolve({ src: src, ls: img.naturalWidth > img.naturalHeight });
+        };
         img.onerror = function () { resolve(null); };
-        img.src = entry.src;
+        img.src = src;
       });
     }
 
     var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    Promise.all(allEntries.map(probe)).then(function (results) {
-      // Portrait and landscape photos are flattened into ONE array
-      // (shared by the lightbox, so prev/next crosses both rows) but
-      // tracked into separate row index-lists, since landscape tiles
-      // use a different aspect ratio and can't share a row with
-      // portrait ones.
-      var photos = [];
-      var idxA = [], idxB = [], idxLS = [];
-      results.forEach(function (p) {
-        if (!p) return; // failed to load -- skip, no placeholder
-        var gi = photos.length;
-        photos.push(p);
-        if (p.ls) idxLS.push(gi);
-        else (idxA.length <= idxB.length ? idxA : idxB).push(gi);
-      });
+    Promise.all(G.photos.map(probe)).then(function (results) {
+      var photos = results.filter(Boolean); // drop whatever failed to load -- no placeholder
+      if (!photos.length) { var sec1 = $("#sec-gallery"); if (sec1) sec1.remove(); return; }
 
-      if (!idxA.length && !idxB.length) { var sec1 = $("#sec-gallery"); if (sec1) sec1.remove(); galleryGrid = null; }
-      if (!idxLS.length) { var secLS = $("#sec-gallery-ls"); if (secLS) secLS.remove(); galleryGridLS = null; }
-      if (!photos.length) return;
+      var idxA = [], idxB = [];
+      photos.forEach(function (p, i) { (i % 2 === 0 ? idxA : idxB).push(i); });
 
       function tileHTML(p, i) {
         return '' +
-        '<button type="button" class="gtile' + (p.ls ? " gtile--ls" : "") + '" data-idx="' + i + '" aria-label="Lihat foto ' + (i + 1) + ' — ' + esc(p.label) + '">' +
-          '<img src="' + esc(p.src) + '" alt="' + esc(p.label) + ' ' + p.n + '">' +
+        '<button type="button" class="gtile' + (p.ls ? " gtile--ls" : "") + '" data-idx="' + i + '" aria-label="Lihat foto ' + (i + 1) + '">' +
+          '<img src="' + esc(p.src) + '" alt="' + esc(G.heading || "Foto") + ' ' + (i + 1) + '">' +
         '</button>';
       }
 
@@ -171,21 +152,18 @@
         trackEl.innerHTML = reduceMotion ? html : html + html; // duplicate for seamless loop
       }
 
-      if (galleryGrid) { fillRow(row1, idxA); fillRow(row2, idxB); }
-      if (galleryGridLS) fillRow(rowLS, idxLS);
+      fillRow(row1, idxA);
+      fillRow(row2, idxB);
 
-      [galleryGrid, galleryGridLS].forEach(function (marqueeEl) {
-        if (!marqueeEl) return;
-        $$(".gtile img", marqueeEl).forEach(function (img) {
-          img.decoding = "async";
-          img.onload = function () { img.closest(".gtile").classList.add("is-ready"); };
-          if (img.complete) img.closest(".gtile").classList.add("is-ready"); // already cached from the probe
-        });
-        marqueeEl.addEventListener("click", function (e) {
-          var t = e.target.closest(".gtile");
-          if (!t) return;
-          openLightbox(parseInt(t.dataset.idx, 10));
-        });
+      $$(".gtile img", galleryGrid).forEach(function (img) {
+        img.decoding = "async";
+        img.onload = function () { img.closest(".gtile").classList.add("is-ready"); };
+        if (img.complete) img.closest(".gtile").classList.add("is-ready"); // already cached from the probe
+      });
+      galleryGrid.addEventListener("click", function (e) {
+        var t = e.target.closest(".gtile");
+        if (!t) return;
+        openLightbox(parseInt(t.dataset.idx, 10));
       });
 
       // Auto-scroll is driven from JS (not a CSS animation) so the row
@@ -197,9 +175,7 @@
       // 60Hz and a 120Hz screen alike, instead of the 120Hz one looking
       // twice as fast/jittery.
       if (!reduceMotion) {
-        var rows = [];
-        if (galleryGrid) { rows.push({ track: row1, dir: 1 }, { track: row2, dir: -1 }); }
-        if (galleryGridLS) rows.push({ track: rowLS, dir: 1 });
+        var rows = [{ track: row1, dir: 1 }, { track: row2, dir: -1 }];
         rows.forEach(function (row) {
           var el = row.track.parentElement; // the scrollable .gallery-row
           var half = row.track.scrollWidth / 2;
@@ -245,10 +221,9 @@
       var lbIdx = 0;
 
       function updateLightbox() {
-        var p = photos[lbIdx];
-        lbImg.src = p.src;
-        lbImg.alt = p.label + " " + p.n;
-        lbCap.textContent = p.label + " · " + (lbIdx + 1) + " / " + photos.length;
+        lbImg.src = photos[lbIdx].src;
+        lbImg.alt = (G.heading || "Foto") + " " + (lbIdx + 1);
+        lbCap.textContent = (G.heading || "Foto") + " · " + (lbIdx + 1) + " / " + photos.length;
       }
       function openLightbox(i) {
         lbIdx = i;
