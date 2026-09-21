@@ -121,7 +121,26 @@ The guest's name then appears under *"Kepada Yth."* on the cover and pre-fills t
 
 ---
 
-## 6 · Maintenance cheatsheet
+## 6 · Hidden secrets (easter eggs)
+
+A little findable game for guests: a bell button appears top-right once the invitation is opened. Tapping it shows 6 locked secrets with hints; doing the matching interaction somewhere on the site unlocks that one (with a toast + a reveal popup), and once all 6 are found, a final message is shown instead — handy for e.g. a keyword for a Kahoot quiz at the reception.
+
+All content lives in `config.js ▸ eggs` — `intro`, `finalTitle`, `finalText`, and `items[]` (each with a `title`, `hint`, `text`, optional `image`, and a `trigger`). The interactions themselves are fixed in `app.js`, one per trigger name:
+
+| `trigger` | How a guest unlocks it |
+|---|---|
+| `coupleTap` | Tap either mempelai's name (in the couple section) 5× in a row |
+| `portraitHold` | Press and hold a mempelai's photo for ~1.2s |
+| `countdownTap` | Tap a countdown number 3× in a row |
+| `galleryPhotos` | Open 5 different photos in the "Our Moments" lightbox |
+| `keyword` | Type a secret word anywhere on the page (set it via that item's `keyword` field) |
+| `closingTap` | Tap the names at the very bottom of the page 5× in a row |
+
+Progress is saved per-device in `localStorage` — it doesn't sync across devices and resets if the guest clears site data. Set `eggs.enabled = false` in `config.js` to turn the whole feature off.
+
+---
+
+## 7 · Maintenance cheatsheet
 
 | I want to… | Do this |
 |---|---|
@@ -139,6 +158,8 @@ The guest's name then appears under *"Kepada Yth."* on the cover and pre-fills t
 | Change the gallery heading | `config.js ▸ gallery.heading` (defaults to "Our Moments") |
 | Add music | drop `song.mp3` into `assets/audio/` (under 4 MB). Set `music.src = ""` to hide the button |
 | Change the max guest count | `config.js ▸ rsvp.maxGuests` |
+| Write the actual easter-egg content / Kahoot keyword | `config.js ▸ eggs` — see § 6 |
+| Turn off the easter eggs | `config.js ▸ eggs.enabled = false` |
 | Cap a specific guest's pax to less than the site-wide max | give them `, <pax>` in `tools/link-generator.html`'s name list — see § 5 |
 | Hide wishes from non-attendees | `Code.gs ▸ HIDE_NON_ATTENDING_WISHES = true`, then re-deploy |
 | Delete a rude message | delete the row in the Google Sheet — it disappears from the site within 30 s |
@@ -151,7 +172,7 @@ After any edit: `git add -A && git commit -m "update" && git push` — Pages red
 
 ---
 
-## 7 · Troubleshooting
+## 8 · Troubleshooting
 
 | Symptom | Fix |
 |---|---|
@@ -165,7 +186,7 @@ After any edit: `git add -A && git commit -m "update" && git push` — Pages red
 
 ---
 
-## 8 · Requirements checklist
+## 9 · Requirements checklist
 
 - [x] RSVP form: full name, attendance, number of guests, wishes
 - [x] Every submission appends a new row to Google Sheets in real time
@@ -187,3 +208,4 @@ After any edit: `git add -A && git commit -m "update" && git push` — Pages red
 - [x] Google Apps Script backend included
 - [x] Maintenance instructions (this file)
 - [x] Bonus: personalised guest links + link generator tool
+- [x] Bonus: hidden secrets easter egg game (6 findable secrets, e.g. for a reception Kahoot keyword)

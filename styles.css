@@ -589,6 +589,56 @@ textarea{resize:vertical; min-height:110px; line-height:1.7}
 }
 .toast.show{opacity:1; transform:translate(-50%,0)}
 
+/* ---------- HIDDEN SECRETS (easter eggs) ---------- */
+.eggs-bell{
+  position:fixed; z-index:55; cursor:pointer;
+  right:16px; top:calc(env(safe-area-inset-top) + 16px);
+  width:44px; height:44px; border-radius:50%; border:1px solid var(--line);
+  background:rgba(243,242,233,.92); backdrop-filter:blur(8px);
+  color:var(--sage-d); display:grid; place-items:center;
+  box-shadow:var(--shadow-m); transition:transform .3s var(--ease);
+  opacity:0; animation:rise .6s var(--ease) .4s forwards;
+}
+.eggs-bell:active{transform:scale(.92)}
+.eggs-bell__ico{width:18px; height:18px}
+.eggs-bell__badge{
+  position:absolute; top:-4px; right:-4px; min-width:18px; height:18px; padding:0 4px;
+  border-radius:999px; background:var(--gold); color:var(--paper);
+  font-size:10px; font-weight:600; line-height:18px; text-align:center;
+  box-shadow:0 0 0 2px var(--paper);
+}
+.eggs-bell__badge.is-complete{background:var(--sage-d)}
+.eggs-bell__badge:empty{display:none}
+
+.eggs-modal{
+  position:fixed; inset:0; z-index:80; display:grid; place-items:center;
+  background:rgba(20,24,20,.55); opacity:0; visibility:hidden; pointer-events:none;
+  transition:opacity .3s var(--ease), visibility 0s .3s;
+  padding:calc(env(safe-area-inset-top) + 14px) 18px calc(env(safe-area-inset-bottom) + 14px);
+}
+.eggs-modal.is-open{opacity:1; visibility:visible; pointer-events:auto; transition:opacity .3s var(--ease)}
+.eggs-modal__card{
+  width:100%; max-width:400px; max-height:82vh; overflow-y:auto;
+  background:var(--paper); border-radius:var(--r); padding:30px 22px 26px;
+  box-shadow:0 20px 60px rgba(0,0,0,.35); text-align:center;
+}
+.eggs-modal__intro{margin:0 0 18px; font-size:14px; color:var(--muted); line-height:1.75}
+.eggs-list{display:flex; flex-direction:column; gap:10px; text-align:left}
+.egg-row{
+  display:flex; align-items:center; gap:12px; padding:12px 14px; width:100%;
+  border:1px solid var(--line); border-radius:12px; background:var(--ivory);
+  cursor:pointer; transition:background .2s, border-color .2s; font:inherit; color:inherit;
+}
+.egg-row.is-locked{cursor:default; opacity:.7}
+.egg-row.is-found{border-color:var(--sage)}
+.egg-row__ico{width:19px; height:19px; flex:none; color:var(--muted)}
+.egg-row.is-found .egg-row__ico{color:var(--sage-d)}
+.egg-row__body{flex:1; min-width:0}
+.egg-row__title{margin:0; font-size:14px; font-weight:500; color:var(--ink)}
+.egg-row__hint{margin:2px 0 0; font-size:12px; color:var(--muted); line-height:1.5}
+.eggs-modal__img{width:100%; border-radius:10px; margin:0 0 14px; display:block}
+.eggs-modal__text{margin:0 0 20px; font-size:15px; color:var(--ink); line-height:1.8}
+
 /* ---------- TABLET / DESKTOP ---------- */
 @media (min-width:700px){
   body{font-size:16px}

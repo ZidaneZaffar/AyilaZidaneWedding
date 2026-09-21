@@ -231,6 +231,7 @@
         lb.classList.add("is-open");
         lb.setAttribute("aria-hidden", "false");
         document.body.classList.add("is-locked");
+        document.dispatchEvent(new CustomEvent("gallery:view", { detail: { idx: i } }));
       }
       function closeLightbox() {
         lb.classList.remove("is-open");
@@ -444,6 +445,167 @@
     clearTimeout(toastT);
     toastT = setTimeout(function () { toastEl.classList.remove("show"); }, 2400);
   }
+
+  /* ---------------------------------------------------------
+     HIDDEN SECRETS (easter eggs)
+     A little findable game: each item in config.js's eggs.items
+     unlocks via one specific interaction (tap/hold/type) scattered
+     around the site. Progress is tracked per-device in localStorage.
+     --------------------------------------------------------- */
+  (function eggs() {
+    var E = C.eggs;
+    if (!E || !E.enabled || !Array.isArray(E.items) || !E.items.length) return;
+
+    var STORAGE_KEY = "wedding_eggs_found";
+    var found = [];
+    try { found = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch (e) { found = []; }
+    if (!Array.isArray(found)) found = [];
+
+    var bell = $("#eggsBell"), badge = $("#eggsBadge");
+    var modal = $("#eggsModal");
+    var listView = $("#eggsListView"), revealView = $("#eggsRevealView");
+    var listEl = $("#eggsList");
+    var revealEyebrow = $("#eggsRevealEyebrow"), revealTitle = $("#eggsRevealTitle");
+    var revealImg = $("#eggsRevealImg"), revealText = $("#eggsRevealText");
+
+    $("#eggsIntro").textContent = E.intro || "";
+    // Stays hidden until the invitation itself is opened, same as the
+    // music button -- it shouldn't appear floating over the cover screen.
+    $("#openBtn").addEventListener("click", function () { bell.hidden = false; });
+
+    function isFound(i) { return found.indexOf(i) > -1; }
+
+    function updateBadge() {
+      var total = E.items.length;
+      badge.textContent = found.length + "/" + total;
+      badge.classList.toggle("is-complete", found.length >= total);
+    }
+
+    function renderList() {
+      listEl.innerHTML = E.items.map(function (item, i) {
+        var f = isFound(i);
+        return '' +
+          '<button type="button" class="egg-row ' + (f ? "is-found" : "is-locked") + '" data-i="' + i + '">' +
+            '<svg class="egg-row__ico" aria-hidden="true"><use href="#i-' + (f ? "check" : "lock") + '"/></svg>' +
+            '<span class="egg-row__body">' +
+              '<span class="egg-row__title">' + esc(f ? item.title : "???") + '</span>' +
+              '<span class="egg-row__hint">' + esc(f ? "Ketuk untuk membaca lagi" : item.hint) + '</span>' +
+            '</span>' +
+          '</button>';
+      }).join("");
+    }
+
+    function showListView() { revealView.hidden = true; listView.hidden = false; }
+    function showReveal(i) {
+      var item = E.items[i];
+      revealEyebrow.textContent = "Rahasia Ditemukan";
+      revealTitle.textContent = item.title;
+      revealText.textContent = item.text;
+      if (item.image) { revealImg.src = item.image; revealImg.hidden = false; }
+      else { revealImg.hidden = true; revealImg.src = ""; }
+      listView.hidden = true; revealView.hidden = false;
+    }
+    function showFinal() {
+      revealEyebrow.textContent = "Semua Rahasia Ditemukan";
+      revealTitle.textContent = E.finalTitle || "Selamat!";
+      revealText.textContent = E.finalText || "";
+      revealImg.hidden = true; revealImg.src = "";
+      listView.hidden = true; revealView.hidden = false;
+    }
+
+    function openModal() { renderList(); showListView(); modal.classList.add("is-open"); modal.setAttribute("aria-hidden", "false"); }
+    function closeModal() { modal.classList.remove("is-open"); modal.setAttribute("aria-hidden", "true"); }
+
+    function unlock(i) {
+      if (isFound(i)) return;
+      found.push(i);
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(found)); } catch (e) {}
+      updateBadge();
+      toast("Rahasia baru ditemukan!");
+      renderList();
+      modal.classList.add("is-open");
+      modal.setAttribute("aria-hidden", "false");
+      if (found.length >= E.items.length) showFinal();
+      else showReveal(i);
+    }
+
+    updateBadge();
+
+    bell.addEventListener("click", openModal);
+    $("#eggsModalClose").addEventListener("click", closeModal);
+    modal.addEventListener("click", function (e) { if (e.target === modal) closeModal(); });
+    $("#eggsBackBtn").addEventListener("click", showListView);
+    listEl.addEventListener("click", function (e) {
+      var row = e.target.closest(".egg-row");
+      if (!row || !row.classList.contains("is-found")) return;
+      showReveal(parseInt(row.dataset.i, 10));
+    });
+
+    function findItemIndex(trigger) {
+      for (var i = 0; i < E.items.length; i++) if (E.items[i].trigger === trigger) return i;
+      return -1;
+    }
+    function tapCounter(el, need, cb) {
+      if (!el) return;
+      var count = 0, timer;
+      el.addEventListener("click", function () {
+        count++;
+        clearTimeout(timer);
+        timer = setTimeout(function () { count = 0; }, 2000); // taps must land within 2s of each other
+        if (count >= need) { count = 0; cb(); }
+      });
+    }
+
+    var iCoupleTap = findItemIndex("coupleTap");
+    if (iCoupleTap > -1) {
+      $$(".person__name").forEach(function (el) { tapCounter(el, 5, function () { unlock(iCoupleTap); }); });
+    }
+
+    var iPortraitHold = findItemIndex("portraitHold");
+    if (iPortraitHold > -1) {
+      $$(".person__portrait").forEach(function (el) {
+        var t;
+        // Only pointerup/pointercancel clear the timer -- not pointerleave,
+        // since a finger drifting slightly off the element mid-hold (or a
+        // spurious leave event some browsers fire) shouldn't cancel an
+        // otherwise legitimate hold.
+        el.addEventListener("pointerdown", function () { t = setTimeout(function () { unlock(iPortraitHold); }, 1200); });
+        ["pointerup", "pointercancel"].forEach(function (ev) {
+          el.addEventListener(ev, function () { clearTimeout(t); });
+        });
+      });
+    }
+
+    var iCountdownTap = findItemIndex("countdownTap");
+    if (iCountdownTap > -1) {
+      $$(".count__cell").forEach(function (el) { tapCounter(el, 3, function () { unlock(iCountdownTap); }); });
+    }
+
+    var iGalleryPhotos = findItemIndex("galleryPhotos");
+    if (iGalleryPhotos > -1) {
+      var seen = {};
+      document.addEventListener("gallery:view", function (e) {
+        seen[e.detail.idx] = true;
+        if (Object.keys(seen).length >= 5) unlock(iGalleryPhotos);
+      });
+    }
+
+    var iKeyword = findItemIndex("keyword");
+    if (iKeyword > -1 && E.items[iKeyword].keyword) {
+      var buf = "";
+      var kw = E.items[iKeyword].keyword.toLowerCase();
+      document.addEventListener("keydown", function (e) {
+        if (e.key.length !== 1) return; // ignore Shift/Enter/Backspace/etc.
+        buf = (buf + e.key.toLowerCase()).slice(-kw.length);
+        if (buf === kw) unlock(iKeyword);
+      });
+    }
+
+    var iClosingTap = findItemIndex("closingTap");
+    if (iClosingTap > -1) {
+      tapCounter($("#closingNames"), 5, function () { unlock(iClosingTap); });
+    }
+  })();
 
   /* ---------------------------------------------------------
      JSONP TRANSPORT  (no CORS configuration required)
