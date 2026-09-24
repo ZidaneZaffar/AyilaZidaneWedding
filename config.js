@@ -212,6 +212,9 @@ window.WEDDING_CONFIG = {
                         to that photo's filename, no folder path)
        countdownTap     tap a countdown number 3 times in a row
        galleryPhotos    open 5 different photos in the gallery lightbox
+       greenClick       click either event icon (rings / glasses) in
+                        the "Akad & Resepsi" section -- both render
+                        in the site's sage/green color
        keyword          type a secret word anywhere on the page
                         (needs `keyword` set below, case-insensitive)
        dateClick        click the day number inside the wedding
@@ -261,16 +264,13 @@ window.WEDDING_CONFIG = {
         image: ""
       },
       {
-        trigger: "keyword",
-        keyword: "lantern",
+        trigger: "greenClick",
         title: "Series Favorit",
-        hint: "Ketik judul series yang lagi kita tonton bareng saat ini, di mana saja di halaman ini.",
+        hint: "Klik warna kesukaan Zidane, atau warna yang akan jadi kesukaan Ayila juga (terpaksa...).",
         text: "Series yang lagi kita tonton bareng saat ini adalah Lantern.",
         image: ""
       },
       {
-        // TODO(zidane/ayila): confirm the exact wording of this fact --
-        // placeholder text below, please replace with the real one.
         trigger: "dateClick",
         title: "Tanggal Favorit",
         hint: "Klik angka favorit kita berdua di halaman ini, bisa jadi tanggal ulang tahun Zidane, bisa jadi tanggal ulang tahun Ayila… emang beda?",
