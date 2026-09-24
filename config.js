@@ -243,7 +243,7 @@ window.WEDDING_CONFIG = {
         trigger: "coupleTap",
         title: "Almamater",
         hint: "Ketuk nama salah satu mempelai 5 kali berturut-turut.",
-        text: "Ayila & Zidane sama-sama lulus dari Fakultas Ilmu Komputer UI — angkatan Ayila adalah Quanta, angkatan Zidane adalah Omega.",
+        text: "Ayila & Zidane sama-sama lulus dari Fakultas Ilmu Komputer UI, angkatan Ayila adalah Quanta(2018), angkatan Zidane adalah Omega(2016).",
         image: ""
       },
       {
@@ -273,8 +273,8 @@ window.WEDDING_CONFIG = {
         // placeholder text below, please replace with the real one.
         trigger: "dateClick",
         title: "Tanggal Favorit",
-        hint: "Klik angka favorit kita berdua di halaman ini — bisa jadi tanggal ulang tahun Zidane, bisa jadi tanggal ulang tahun Ayila… emang beda?",
-        text: "Tanggal 24 itu spesial buat kita berdua -- ternyata tanggal lahir Zidane dan Ayila sama-sama tanggal 24, dan pas juga jadi tanggal pernikahan kita!",
+        hint: "Klik angka favorit kita berdua di halaman ini, bisa jadi tanggal ulang tahun Zidane, bisa jadi tanggal ulang tahun Ayila… emang beda?",
+        text: "Tanggal 24 itu spesial buat kita berdua, ternyata tanggal lahir Zidane dan Ayila sama-sama tanggal 24, dan pas juga jadi tanggal pernikahan kita!",
         image: ""
       }
     ]
