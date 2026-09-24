@@ -135,6 +135,7 @@ All content lives in `config.js ▸ eggs` — `intro`, `finalTitle`, `finalText`
 | `galleryPhotoClick` | Open one specific photo in the "Our Moments" lightbox (set that item's `matchFile` to the photo's filename) |
 | `countdownTap` | Tap a countdown number 3× in a row |
 | `galleryPhotos` | Open 5 different photos in the "Our Moments" lightbox |
+| `greenClick` | Click either event icon (rings / glasses) in the "Akad & Resepsi" section — both render in the site's sage/green color |
 | `keyword` | Type a secret word anywhere on the page (set it via that item's `keyword` field) |
 | `dateClick` | Click the day number inside the wedding date next to the countdown (e.g. the "24" in "24 Oktober 2026") |
 | `closingTap` | Tap the names at the very bottom of the page 5× in a row |

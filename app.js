@@ -609,6 +609,11 @@
       if (dateEl) dateEl.addEventListener("click", function () { unlock(iDateClick); });
     }
 
+    var iGreenClick = findItemIndex("greenClick");
+    if (iGreenClick > -1) {
+      $$(".event__ico").forEach(function (el) { el.addEventListener("click", function () { unlock(iGreenClick); }); });
+    }
+
     var iKeyword = findItemIndex("keyword");
     if (iKeyword > -1 && E.items[iKeyword].keyword) {
       var buf = "";
