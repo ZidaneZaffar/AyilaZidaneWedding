@@ -202,18 +202,28 @@ window.WEDDING_CONFIG = {
      reception.
 
      `trigger` picks which interaction unlocks that item -- the
-     interaction itself is fixed in app.js, only which fact goes with
+     interaction itself is fixed in app.js, only which fact (and,
+     for galleryPhotoClick/dateClick, which exact element) goes with
      which trigger is up to you here. One item per trigger:
-       coupleTap     tap either mempelai's name (in the couple
-                     section) 5 times in a row
-       portraitHold  press and hold a mempelai's photo for ~1.2s
-       countdownTap  tap a countdown number 3 times in a row
-       galleryPhotos open 5 different photos in the gallery lightbox
-       keyword       type a secret word anywhere on the page
-                     (needs `keyword` set below, case-insensitive)
-       closingTap    tap the names at the very bottom of the page
-                     5 times in a row
-     `image` is optional -- leave "" to show text only.
+       coupleTap        tap either mempelai's name (in the couple
+                        section) 5 times in a row
+       galleryPhotoClick  open one specific photo in the "Our
+                        Moments" gallery lightbox (set `matchFile`
+                        to that photo's filename, no folder path)
+       countdownTap     tap a countdown number 3 times in a row
+       galleryPhotos    open 5 different photos in the gallery lightbox
+       keyword          type a secret word anywhere on the page
+                        (needs `keyword` set below, case-insensitive)
+       dateClick        click the day number inside the wedding
+                        date next to the countdown (e.g. the "24" in
+                        "24 Oktober 2026")
+       closingTap       tap the names at the very bottom of the page
+                        5 times in a row
+     `image` is optional -- leave "" to show text only. Hints are
+     meant to be a riddle, not instructions -- they name what to look
+     for, not how to interact with it, so finding the right thing is
+     the actual puzzle even though the interaction itself is a single
+     easy tap/click.
      Leave `enabled: false` to turn the whole feature off.        */
   eggs: {
     enabled: true,
@@ -222,9 +232,10 @@ window.WEDDING_CONFIG = {
     finalText: "Simpan baik-baik semua fakta tadi — bakal muncul lagi di sesi Kahoot waktu resepsi!",
     items: [
       {
-        trigger: "portraitHold",
+        trigger: "galleryPhotoClick",
+        matchFile: "IMG_6559.jpg",
         title: "Cincin Pertama",
-        hint: "Tekan dan tahan salah satu foto mempelai selama 1-2 detik.",
+        hint: "Cari satu-satunya foto di galeri \"Our Moments\" yang diambil saat malam hari.",
         text: "Ayila dikasih cincin pertama kali di Museum Nasional.",
         image: ""
       },
@@ -255,6 +266,15 @@ window.WEDDING_CONFIG = {
         title: "Series Favorit",
         hint: "Ketik judul series yang lagi kita tonton bareng saat ini, di mana saja di halaman ini.",
         text: "Series yang lagi kita tonton bareng saat ini adalah Lantern.",
+        image: ""
+      },
+      {
+        // TODO(zidane/ayila): confirm the exact wording of this fact --
+        // placeholder text below, please replace with the real one.
+        trigger: "dateClick",
+        title: "Tanggal Favorit",
+        hint: "Klik angka favorit kita berdua di halaman ini — bisa jadi tanggal ulang tahun Zidane, bisa jadi tanggal ulang tahun Ayila… emang beda?",
+        text: "Tanggal 24 itu spesial buat kita berdua -- ternyata tanggal lahir Zidane dan Ayila sama-sama tanggal 24, dan pas juga jadi tanggal pernikahan kita!",
         image: ""
       }
     ]

@@ -245,7 +245,7 @@
         lb.classList.add("is-open");
         lb.setAttribute("aria-hidden", "false");
         document.body.classList.add("is-locked");
-        document.dispatchEvent(new CustomEvent("gallery:view", { detail: { idx: i } }));
+        document.dispatchEvent(new CustomEvent("gallery:view", { detail: { idx: i, src: photos[i].src } }));
       }
       function closeLightbox() {
         lb.classList.remove("is-open");
@@ -358,7 +358,14 @@
   /* ---------------------------------------------------------
      COUNTDOWN
      --------------------------------------------------------- */
-  $("#countDate").textContent = C.wedding.dayLabel + ", " + C.wedding.dateLabel;
+  (function () {
+    // Day number split into its own span so a hidden secret (see EASTER
+    // EGGS below) can target just that number without a visible cue.
+    var dateParts = C.wedding.dateLabel.split(" ");
+    var day = dateParts.shift();
+    $("#countDate").innerHTML = esc(C.wedding.dayLabel) + ", " +
+      '<span id="dateEggNum">' + esc(day) + '</span> ' + esc(dateParts.join(" "));
+  })();
   var target = new Date(C.wedding.countdownTo).getTime();
   var cd = { d: $('[data-cd="d"]'), h: $('[data-cd="h"]'), m: $('[data-cd="m"]'), s: $('[data-cd="s"]') };
   var pad = function (n) { return String(n).padStart(2, "0"); };
@@ -577,33 +584,29 @@
       $$(".person__name").forEach(function (el) { tapCounter(el, 5, function () { unlock(iCoupleTap); }); });
     }
 
-    var iPortraitHold = findItemIndex("portraitHold");
-    if (iPortraitHold > -1) {
-      $$(".person__photo").forEach(function (el) {
-        var t;
-        // Only pointerup/pointercancel clear the timer -- not pointerleave,
-        // since a finger drifting slightly off the element mid-hold (or a
-        // spurious leave event some browsers fire) shouldn't cancel an
-        // otherwise legitimate hold.
-        el.addEventListener("pointerdown", function () { t = setTimeout(function () { unlock(iPortraitHold); }, 1200); });
-        ["pointerup", "pointercancel"].forEach(function (ev) {
-          el.addEventListener(ev, function () { clearTimeout(t); });
-        });
-      });
-    }
-
     var iCountdownTap = findItemIndex("countdownTap");
     if (iCountdownTap > -1) {
       $$(".count__cell").forEach(function (el) { tapCounter(el, 3, function () { unlock(iCountdownTap); }); });
     }
 
+    var iGalleryPhotoClick = findItemIndex("galleryPhotoClick");
     var iGalleryPhotos = findItemIndex("galleryPhotos");
-    if (iGalleryPhotos > -1) {
+    if (iGalleryPhotoClick > -1 || iGalleryPhotos > -1) {
+      var matchFile = iGalleryPhotoClick > -1 ? E.items[iGalleryPhotoClick].matchFile : null;
       var seen = {};
       document.addEventListener("gallery:view", function (e) {
-        seen[e.detail.idx] = true;
-        if (Object.keys(seen).length >= 5) unlock(iGalleryPhotos);
+        if (matchFile && e.detail.src && e.detail.src.indexOf(matchFile) > -1) unlock(iGalleryPhotoClick);
+        if (iGalleryPhotos > -1) {
+          seen[e.detail.idx] = true;
+          if (Object.keys(seen).length >= 5) unlock(iGalleryPhotos);
+        }
       });
+    }
+
+    var iDateClick = findItemIndex("dateClick");
+    if (iDateClick > -1) {
+      var dateEl = $("#dateEggNum");
+      if (dateEl) dateEl.addEventListener("click", function () { unlock(iDateClick); });
     }
 
     var iKeyword = findItemIndex("keyword");

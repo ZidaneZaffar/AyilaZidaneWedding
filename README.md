@@ -132,11 +132,14 @@ All content lives in `config.js ▸ eggs` — `intro`, `finalTitle`, `finalText`
 | `trigger` | How a guest unlocks it |
 |---|---|
 | `coupleTap` | Tap either mempelai's name (in the couple section) 5× in a row |
-| `portraitHold` | Press and hold a mempelai's photo for ~1.2s |
+| `galleryPhotoClick` | Open one specific photo in the "Our Moments" lightbox (set that item's `matchFile` to the photo's filename) |
 | `countdownTap` | Tap a countdown number 3× in a row |
 | `galleryPhotos` | Open 5 different photos in the "Our Moments" lightbox |
 | `keyword` | Type a secret word anywhere on the page (set it via that item's `keyword` field) |
+| `dateClick` | Click the day number inside the wedding date next to the countdown (e.g. the "24" in "24 Oktober 2026") |
 | `closingTap` | Tap the names at the very bottom of the page 5× in a row |
+
+Hints are written as a riddle, not instructions — they name what to look for (e.g. "the only photo taken at night"), not how to interact with it, since the interaction itself is always a single easy tap/click once you've found the right thing.
 
 Progress is saved per-device in `localStorage` — it doesn't sync across devices and resets if the guest clears site data. Set `eggs.enabled = false` in `config.js` to turn the whole feature off.
 
