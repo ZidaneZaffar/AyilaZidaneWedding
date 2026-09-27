@@ -409,7 +409,7 @@
     $("#giftQris").innerHTML = '' +
       '<p class="gift-card__bank">QRIS</p>' +
       '<img class="gift-qris__img" src="' + esc(C.gift.qris.image) + '" alt="Kode QRIS">' +
-      '<p class="gift-qris__label">Scan untuk bayar dengan QRIS</p>' +
+      '<p class="gift-qris__label">Scan untuk mengirim hadiah</p>' +
       (C.gift.qris.holder ? '<p class="gift-card__holder">a.n. ' + esc(C.gift.qris.holder) + '</p>' : '');
     $("#giftQris").hidden = false;
   }
