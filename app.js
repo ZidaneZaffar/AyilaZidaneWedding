@@ -304,8 +304,8 @@
   $("#closingNames").innerHTML     = namesHTML;
   $("#footNames").innerHTML        = namesHTML.replace(/<[^>]+>/g, " ").trim();
   $("#closingFamilies").innerHTML  =
-    "Keluarga Besar " + esc(C.couple.bride.father) + " &amp; " + esc(C.couple.bride.mother.split("&")[0].trim()) +
-    "<br>Keluarga Besar " + esc(C.couple.groom.father) + " &amp; " + esc(C.couple.groom.mother.split("&")[0].trim());
+    "Keluarga Besar " + esc(C.couple.bride.father) + " &amp; " + esc(C.couple.bride.mother) +
+    "<br>Keluarga Besar " + esc(C.couple.groom.father) + " &amp; " + esc(C.couple.groom.mother);
 
   /* ---------------------------------------------------------
      GOOGLE CALENDAR + MAPS LINKS
@@ -348,6 +348,7 @@
       '<div class="event__rule"></div>' +
       '<p class="event__place">' + esc(C.venue.name) + '</p>' +
       '<p class="event__addr">' + esc(C.venue.address) + '</p>' +
+      (ev.note ? '<p class="event__limited">' + esc(ev.note) + '</p>' : '') +
       '<div class="event__links">' +
         '<a class="chip" href="' + esc(C.venue.mapsUrl) + '" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-pin"/></svg>Lihat Peta</a>' +
         '<a class="chip" href="' + esc(cal) + '" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-cal"/></svg>Save the Date</a>' +
@@ -409,7 +410,7 @@
     $("#giftQris").innerHTML = '' +
       '<p class="gift-card__bank">QRIS</p>' +
       '<img class="gift-qris__img" src="' + esc(C.gift.qris.image) + '" alt="Kode QRIS">' +
-      '<p class="gift-qris__label">Scan untuk bayar dengan QRIS</p>' +
+      '<p class="gift-qris__label">Scan untuk mengirim hadiah melalui QRIS</p>' +
       (C.gift.qris.holder ? '<p class="gift-card__holder">a.n. ' + esc(C.gift.qris.holder) + '</p>' : '');
     $("#giftQris").hidden = false;
   }
@@ -888,6 +889,27 @@
       }
     });
   }
+
+  /* ---------------------------------------------------------
+     VENUE ARRIVAL NOTICE (shown once, shortly after opening)
+     --------------------------------------------------------- */
+  (function venueNotice() {
+    var notice = C.venue && C.venue.arrivalNotice;
+    if (!notice) return;
+    var modal = $("#venueModal");
+    $("#venueModalText").textContent = notice;
+    function close() { modal.classList.remove("is-open"); modal.setAttribute("aria-hidden", "true"); }
+    $("#venueModalClose").addEventListener("click", close);
+    $("#venueModalOk").addEventListener("click", close);
+    modal.addEventListener("click", function (e) { if (e.target === modal) close(); });
+    $("#openBtn").addEventListener("click", function () {
+      // Wait out the cover-close transition so it doesn't pop in mid-animation.
+      setTimeout(function () {
+        modal.classList.add("is-open");
+        modal.setAttribute("aria-hidden", "false");
+      }, 1300);
+    }, { once: true });
+  })();
 
   /* ---------------------------------------------------------
      OPEN INVITATION
