@@ -23,7 +23,7 @@ window.WEDDING_CONFIG = {
       shortName: "Ayila",
       order:     "Putri dari",               // "Daughter of"
       father:    "Agung Sucahyo",
-      mother:    "Lina B. Tusianti",
+      mother:    "Lina Barlina Tusianti",
       photo:     "assets/img/bride.jpg",
       instagram: ""
     },
