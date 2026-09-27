@@ -304,8 +304,8 @@
   $("#closingNames").innerHTML     = namesHTML;
   $("#footNames").innerHTML        = namesHTML.replace(/<[^>]+>/g, " ").trim();
   $("#closingFamilies").innerHTML  =
-    "Keluarga Besar " + esc(C.couple.bride.father) + " &amp; " + esc(C.couple.bride.mother.split("&")[0].trim()) +
-    "<br>Keluarga Besar " + esc(C.couple.groom.father) + " &amp; " + esc(C.couple.groom.mother.split("&")[0].trim());
+    "Keluarga Besar " + esc(C.couple.bride.father) + " &amp; " + esc(C.couple.bride.mother) +
+    "<br>Keluarga Besar " + esc(C.couple.groom.father) + " &amp; " + esc(C.couple.groom.mother);
 
   /* ---------------------------------------------------------
      GOOGLE CALENDAR + MAPS LINKS
