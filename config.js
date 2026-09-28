@@ -289,7 +289,13 @@ window.WEDDING_CONFIG = {
     ]
   },
 
-  /* ---------- 13. META / SHARING ---------- */
+  /* ---------- 13. META / SHARING ----------
+     These also set the tab title live, but the WhatsApp/FB/etc. link
+     preview banner is read from index.html's <head> directly (that
+     crawler never runs app.js) -- so if you change siteTitle,
+     description, or ogImage here, update the matching <meta> tags at
+     the top of index.html too, or the shared-link banner goes stale.
+     ogImage should be a landscape (roughly 1200x630) photo.         */
   meta: {
     siteTitle:   "Ayila & Zidane — Wedding Invitation",
     description: "24 Oktober 2026 · ARTOTEL Living World Kota Wisata",

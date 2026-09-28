@@ -121,6 +121,8 @@ The guest's name then appears under *"Kepada Yth."* on the cover and pre-fills t
 
 **Limiting how many guests someone can bring:** add `, <pax>` after the name in the textarea, e.g. `Bapak Budi Santoso & Keluarga, 2`. That guest's link gets `&pax=2` appended, which caps their RSVP guest-count stepper at 2 (they can still choose 1). Give someone `, 1` and their stepper is locked to 1 — they can't bring a plus-one. Leave the number off entirely and that guest just gets the normal site-wide `rsvp.maxGuests` limit, no extra cap.
 
+**Inviting someone to only one session:** add a third field after the name, e.g. `Rina Wulandari, , akad` or `Tim Kantor, , resepsi`. That guest's link gets `&events=akad` (or `&events=resepsi`) appended, so the Events section shows only that one card instead of both. Leave it off and the guest sees both sessions, as usual.
+
 ---
 
 ## 6 · Hidden secrets (easter eggs)
@@ -167,6 +169,7 @@ Progress is saved per-device in `localStorage` — it doesn't sync across device
 | Write the actual easter-egg content / Kahoot keyword | `config.js ▸ eggs` — see § 6 |
 | Turn off the easter eggs | `config.js ▸ eggs.enabled = false` |
 | Cap a specific guest's pax to less than the site-wide max | give them `, <pax>` in `tools/link-generator.html`'s name list — see § 5 |
+| Invite a guest to only Akad or only Resepsi | give them `, , akad` or `, , resepsi` in `tools/link-generator.html`'s name list — see § 5 |
 | Hide wishes from non-attendees | `Code.gs ▸ HIDE_NON_ATTENDING_WISHES = true`, then re-deploy |
 | Delete a rude message | delete the row in the Google Sheet — it disappears from the site within 30 s |
 | Get an email per RSVP | in Apps Script: **Triggers ▸ Add trigger ▸ `onFormSubmitNotify` ▸ From spreadsheet ▸ On change** |

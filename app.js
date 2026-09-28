@@ -332,7 +332,14 @@
   /* ---------------------------------------------------------
      EVENTS
      --------------------------------------------------------- */
-  $("#eventsList").innerHTML = C.events.map(function (ev) {
+  // Some guests are only invited to one session -- index.html?events=akad
+  // or ?events=resepsi shows just that event's card; omit the param (or
+  // use any other value) to show both, as usual.
+  var eventsFilter = (params.get("events") || "").trim().toLowerCase();
+  var eventsToShow = eventsFilter ? C.events.filter(function (ev) { return ev.key === eventsFilter; }) : C.events;
+  if (!eventsToShow.length) eventsToShow = C.events; // unknown filter value -- fail open, show both
+
+  $("#eventsList").innerHTML = eventsToShow.map(function (ev) {
     var cal = calendarUrl({
       title: ev.name + " — " + C.calendar.title,
       startISO: ev.startISO, endISO: ev.endISO,
