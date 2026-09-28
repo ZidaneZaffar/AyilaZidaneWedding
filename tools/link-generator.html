@@ -37,6 +37,11 @@
   <label for="names">Daftar Nama Tamu — satu nama per baris. Opsional per baris: <code>Nama, pax, sesi</code> (pax = jumlah tamu, sesi = <code>akad</code> / <code>resepsi</code> / kosongkan untuk keduanya)</label>
   <textarea id="names" placeholder="Ade Fitriyani&#10;Bapak Budi Santoso &amp; Keluarga, 2&#10;Rina Wulandari, 1, akad&#10;Tim Kantor, , resepsi"></textarea>
 
+  <label style="display:flex;align-items:center;gap:8px;text-transform:none;letter-spacing:0;font-size:14px">
+    <input type="checkbox" id="useCode" checked style="width:auto;margin:0">
+    Sembunyikan nama/pax/sesi di link (pakai kode acak — <code>?g=AB12CD</code> — bukan <code>?to=&amp;pax=&amp;events=</code> polos)
+  </label>
+
   <div class="row">
     <button id="gen">Buat Link</button>
     <button id="csv" class="ghost">Unduh CSV</button>
@@ -44,25 +49,53 @@
   </div>
 
   <table id="out" hidden><thead><tr><th>Nama</th><th>Link</th><th></th></tr></thead><tbody></tbody></table>
+
+  <div id="guestsBlock" hidden style="margin-top:26px">
+    <label>Tempel blok ini ke <code>config.js ▸ guests</code> (menggantikan isi array yang ada) supaya kode di atas bisa dikenali situs</label>
+    <textarea id="guestsCode" readonly style="min-height:180px;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px"></textarea>
+    <div class="row"><button id="copyGuests" class="ghost">Salin Blok</button></div>
+  </div>
 </div>
 
 <script>
+// Same deterministic hash as the Excel formula in README.md § 5 --
+// a stable, meaningless-looking code per row (position + name text),
+// not derived from pax/events at all (those live in config.js's
+// `guests` row, not encoded in the code), so it never changes across
+// re-generation unless the name itself changes.
+function guestCode(name, row){
+  var weighted = 0;
+  for (var i = 0; i < name.length; i++) weighted += name.charCodeAt(i) * (i + 1);
+  var mod = Math.pow(36, 6);
+  var seed = weighted * 1000003 + row * 97;
+  var n = ((seed % mod) + mod) % mod;
+  return n.toString(36).toUpperCase().padStart(6, '0');
+}
+
 var rows = [];
 function build(){
   var base = document.getElementById('base').value.trim();
   if(!base){ alert('Isi URL undangan terlebih dahulu.'); return; }
   if(!/\/$/.test(base) && !/\.html$/.test(base)) base += '/';
+  var useCode = document.getElementById('useCode').checked;
   rows = document.getElementById('names').value.split('\n')
     .map(function(s){return s.trim();}).filter(Boolean)
-    .map(function(line){
+    .map(function(line, i){
       var parts = line.split(',');
       var name = parts[0].trim();
       var pax = parts.length > 1 ? parseInt(parts[1], 10) : NaN;
       var session = parts.length > 2 ? parts[2].trim().toLowerCase() : '';
-      var url = base + '?to=' + encodeURIComponent(name);
-      if (pax >= 1) url += '&pax=' + pax;
-      if (session === 'akad' || session === 'resepsi') url += '&events=' + session;
-      return {name: name, pax: pax >= 1 ? pax : null, session: session || null, url: url};
+      session = (session === 'akad' || session === 'resepsi') ? session : '';
+      var code = guestCode(name, i + 1);
+      var url;
+      if (useCode) {
+        url = base + '?g=' + code;
+      } else {
+        url = base + '?to=' + encodeURIComponent(name);
+        if (pax >= 1) url += '&pax=' + pax;
+        if (session) url += '&events=' + session;
+      }
+      return {name: name, pax: pax >= 1 ? pax : null, session: session || null, code: code, url: url};
     });
 
   var tb = document.querySelector('#out tbody');
@@ -74,6 +107,17 @@ function build(){
            '</td><td class="act"><button data-i="'+i+'" class="ghost">Salin</button></td></tr>';
   }).join('');
   document.getElementById('out').hidden = !rows.length;
+
+  var guestsBlock = document.getElementById('guestsBlock');
+  if (useCode && rows.length) {
+    document.getElementById('guestsCode').value = rows.map(function(r){
+      return '    { code: "' + r.code + '", name: "' + r.name.replace(/"/g,'\\"') +
+             '", pax: ' + (r.pax || 'null') + ', events: "' + (r.session || '') + '" },';
+    }).join('\n');
+    guestsBlock.hidden = false;
+  } else {
+    guestsBlock.hidden = true;
+  }
 }
 document.getElementById('gen').onclick = build;
 document.querySelector('#out').addEventListener('click', function(e){
@@ -81,6 +125,10 @@ document.querySelector('#out').addEventListener('click', function(e){
   navigator.clipboard.writeText(rows[b.dataset.i].url);
   b.textContent = 'Tersalin'; setTimeout(function(){ b.textContent='Salin'; }, 1500);
 });
+document.getElementById('copyGuests').onclick = function(){
+  navigator.clipboard.writeText(document.getElementById('guestsCode').value);
+  this.textContent='Tersalin'; var b=this; setTimeout(function(){b.textContent='Salin Blok';},1500);
+};
 document.getElementById('copyAll').onclick = function(){
   if(!rows.length) return build();
   navigator.clipboard.writeText(rows.map(function(r){return r.name+' — '+r.url;}).join('\n'));
@@ -88,7 +136,7 @@ document.getElementById('copyAll').onclick = function(){
 };
 document.getElementById('csv').onclick = function(){
   if(!rows.length) build();
-  var csv = 'Nama,Pax,Sesi,Link\n' + rows.map(function(r){return '"'+r.name.replace(/"/g,'""')+'","'+(r.pax||'')+'","'+(r.session||'')+'","'+r.url+'"';}).join('\n');
+  var csv = 'Nama,Pax,Sesi,Kode,Link\n' + rows.map(function(r){return '"'+r.name.replace(/"/g,'""')+'","'+(r.pax||'')+'","'+(r.session||'')+'","'+r.code+'","'+r.url+'"';}).join('\n');
   var a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
   a.download = 'guest-links.csv'; a.click();

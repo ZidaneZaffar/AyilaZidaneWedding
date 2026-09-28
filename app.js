@@ -51,9 +51,19 @@
     coverImg.src = C.cover.photo;
   }
 
-  // Personalised greeting:  index.html?to=Ade%20Fitriyani
+  // Personalised link: normally an opaque per-guest code
+  // (index.html?g=AB12CD) looked up in config.js's `guests` list, so
+  // the guest's name/pax/session aren't sitting in plain text in a
+  // link they could read or tamper with. Falls back to the older
+  // plain params directly (?to=Ade%20Fitriyani&pax=2&events=akad)
+  // for any links sent out before `guests` existed, or for anyone
+  // who'd rather skip the code lookup entirely.
   var params = new URLSearchParams(location.search);
-  var guest = (params.get("to") || params.get("guest") || "").trim();
+  var guestCode = (params.get("g") || "").trim();
+  var guestRecord = (guestCode && Array.isArray(C.guests))
+    ? C.guests.find(function (g) { return g.code === guestCode; })
+    : null;
+  var guest = guestRecord ? guestRecord.name : (params.get("to") || params.get("guest") || "").trim();
   if (guest) {
     $("#guestName").textContent = decodeURIComponent(guest);
     $("#coverGuestBlock").hidden = false;
@@ -334,8 +344,9 @@
      --------------------------------------------------------- */
   // Some guests are only invited to one session -- index.html?events=akad
   // or ?events=resepsi shows just that event's card; omit the param (or
-  // use any other value) to show both, as usual.
-  var eventsFilter = (params.get("events") || "").trim().toLowerCase();
+  // use any other value) to show both, as usual. A guest code's own
+  // `events` field (if set) takes priority over the raw param.
+  var eventsFilter = (guestRecord && guestRecord.events) ? String(guestRecord.events).trim().toLowerCase() : (params.get("events") || "").trim().toLowerCase();
   var eventsToShow = eventsFilter ? C.events.filter(function (ev) { return ev.key === eventsFilter; }) : C.events;
   if (!eventsToShow.length) eventsToShow = C.events; // unknown filter value -- fail open, show both
 
@@ -691,8 +702,9 @@
 
   // A personalised link can cap the guest count below the site-wide
   // max — e.g. ?to=Budi%20Santoso&pax=2 lets that guest pick 1 or 2,
-  // while a guest invited with pax=1 can only ever pick 1.
-  var invitedPax = parseInt(params.get("pax"), 10);
+  // while a guest invited with pax=1 can only ever pick 1. A guest
+  // code's own `pax` field (if set) takes priority over the raw param.
+  var invitedPax = (guestRecord && guestRecord.pax) ? guestRecord.pax : parseInt(params.get("pax"), 10);
   var guestsMax = (invitedPax >= 1) ? Math.min(invitedPax, C.rsvp.maxGuests) : C.rsvp.maxGuests;
   guestsInput.max = guestsMax;
   if (invitedPax >= 1) {
