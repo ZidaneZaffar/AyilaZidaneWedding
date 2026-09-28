@@ -122,17 +122,16 @@ window.WEDDING_CONFIG = {
   ],
 
   /* ---------- 6. VENUE ----------
-     `arrivalNotice` (optional -- leave "" to disable) pops up once,
-     shortly after the guest taps "Buka Undangan" -- handy for a
-     detail worth flagging before they even reach the venue section,
-     like which floor to head to or where they can park.            */
+     `parkingNote` (optional -- leave "" to hide) shows as a small
+     card right under the address on each event, e.g. for parking
+     directions.                                                    */
   venue: {
     name:      "ARTOTEL Living World Kota Wisata, Lt. 5",
     address:   "Jl. Boulevard Kota Wisata, Ciangsana, Kec. Gn. Putri, Kabupaten Bogor, Jawa Barat 16968",
     mapsUrl:   "https://maps.app.goo.gl/iWCCY8fCRgTXGmXu5",
     // Used for the embedded map preview (no API key required).
     mapsEmbedQuery: "ARTOTEL Living World Kota Wisata, Jl. Boulevard Kota Wisata, Ciangsana, Gunung Putri, Bogor, Jawa Barat 16968",
-    arrivalNotice: "Acara berlangsung di Lt. 5 ARTOTEL Living World Kota Wisata. Anda bisa langsung menuju dan parkir di Lt. 5 tersebut."
+    parkingNote: "Parkir bisa langsung menuju Lt. 5 Living World Kota Wisata."
   },
 
   /* ---------- 7. GOOGLE CALENDAR ---------- */

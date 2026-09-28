@@ -348,6 +348,11 @@
       '<div class="event__rule"></div>' +
       '<p class="event__place">' + esc(C.venue.name) + '</p>' +
       '<p class="event__addr">' + esc(C.venue.address) + '</p>' +
+      (C.venue.parkingNote ? '' +
+        '<p class="event__parking">' +
+          '<svg class="event__parking-ico" aria-hidden="true"><use href="#i-pin"/></svg>' +
+          '<span>' + esc(C.venue.parkingNote) + '</span>' +
+        '</p>' : '') +
       (ev.note ? '<p class="event__limited">' + esc(ev.note) + '</p>' : '') +
       '<div class="event__links">' +
         '<a class="chip" href="' + esc(C.venue.mapsUrl) + '" target="_blank" rel="noopener"><svg aria-hidden="true"><use href="#i-pin"/></svg>Lihat Peta</a>' +
@@ -889,27 +894,6 @@
       }
     });
   }
-
-  /* ---------------------------------------------------------
-     VENUE ARRIVAL NOTICE (shown once, shortly after opening)
-     --------------------------------------------------------- */
-  (function venueNotice() {
-    var notice = C.venue && C.venue.arrivalNotice;
-    if (!notice) return;
-    var modal = $("#venueModal");
-    $("#venueModalText").textContent = notice;
-    function close() { modal.classList.remove("is-open"); modal.setAttribute("aria-hidden", "true"); }
-    $("#venueModalClose").addEventListener("click", close);
-    $("#venueModalOk").addEventListener("click", close);
-    modal.addEventListener("click", function (e) { if (e.target === modal) close(); });
-    $("#openBtn").addEventListener("click", function () {
-      // Wait out the cover-close transition so it doesn't pop in mid-animation.
-      setTimeout(function () {
-        modal.classList.add("is-open");
-        modal.setAttribute("aria-hidden", "false");
-      }, 1300);
-    }, { once: true });
-  })();
 
   /* ---------------------------------------------------------
      OPEN INVITATION
