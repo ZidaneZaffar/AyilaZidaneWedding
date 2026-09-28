@@ -111,15 +111,39 @@ This is what took the gallery from ~65MB of raw photos down to ~2MB served to gu
 
 ## 5 · Personalised guest links
 
-Open `tools/link-generator.html` in a browser, paste your invitation URL and a list of names, and it produces one link per guest:
+Open `tools/link-generator.html` in a browser, paste your invitation URL and a list of names, and it produces one link per guest. Each line can optionally include pax and session too: `Nama, pax, sesi` — e.g. `Bapak Budi Santoso & Keluarga, 2` or `Rina Wulandari, 1, akad` or `Tim Kantor, , resepsi` (see § below for what pax/sesi do).
+
+By default the tool builds **opaque-code links** — `?g=AB12CD` — where the code means nothing on its own; the actual name/pax/session live in `config.js ▸ guests`, keyed by that code, so a guest can't read or edit their invitation's data by editing the link. The page also gives you a ready-to-paste block for `config.js ▸ guests` — copy it in and deploy.
 
 ```
-https://username.github.io/wedding-ayila-zidane/?to=Ade%20Fitriyani
+https://username.github.io/wedding-ayila-zidane/?g=AB12CD
 ```
 
-The guest's name then appears under *"Kepada Yth."* on the cover and pre-fills the RSVP form. Export the whole list as CSV for WhatsApp blasting.
+Untick "Sembunyikan nama/pax/sesi di link" in the tool to fall back to the older, human-readable format instead — still fully supported, just not tamper-proof:
 
-**Limiting how many guests someone can bring:** add `, <pax>` after the name in the textarea, e.g. `Bapak Budi Santoso & Keluarga, 2`. That guest's link gets `&pax=2` appended, which caps their RSVP guest-count stepper at 2 (they can still choose 1). Give someone `, 1` and their stepper is locked to 1 — they can't bring a plus-one. Leave the number off entirely and that guest just gets the normal site-wide `rsvp.maxGuests` limit, no extra cap.
+```
+https://username.github.io/wedding-ayila-zidane/?to=Ade%20Fitriyani&pax=2&events=akad
+```
+
+Either way, the guest's name appears under *"Kepada Yth."* on the cover and pre-fills the RSVP form. Export the whole list as CSV for WhatsApp blasting.
+
+**Limiting how many guests someone can bring:** the pax field (2nd, e.g. `, 2`) caps their RSVP guest-count stepper at 2 (they can still choose 1). Give someone `, 1` and their stepper is locked to 1 — they can't bring a plus-one. Leave it off and that guest just gets the normal site-wide `rsvp.maxGuests` limit, no extra cap.
+
+**Inviting someone to only one session:** the session field (3rd, e.g. `, , akad` or `, , resepsi`) shows just that one Events card instead of both. Leave it off and the guest sees both sessions, as usual.
+
+**Generating codes in Excel/Sheets instead of the HTML tool:** if you're managing your guest list as a spreadsheet already, this formula produces the exact same kind of code — deterministic (stable if you re-open/recalculate the sheet, changes only if the name changes), and meaningless on its own. Assumes row 1 is a header row, guest names start in `A2`:
+
+```
+=BASE(MOD(SUMPRODUCT(CODE(MID(A2,ROW(INDIRECT("1:"&LEN(A2))),1))*ROW(INDIRECT("1:"&LEN(A2))))*1000003+(ROW()-1)*97,36^6),36,6)
+```
+
+Fill it down column `E` (or wherever) alongside Name/Pax/Sesi columns, then for each row build the config entry and paste the whole set into `config.js ▸ guests`:
+
+```
+{ code: "AB12CD", name: "Ade Fitriyani", pax: 2, events: "" },
+```
+
+and the link itself is just `https://.../?g=` + that cell's code.
 
 ---
 
@@ -167,6 +191,7 @@ Progress is saved per-device in `localStorage` — it doesn't sync across device
 | Write the actual easter-egg content / Kahoot keyword | `config.js ▸ eggs` — see § 6 |
 | Turn off the easter eggs | `config.js ▸ eggs.enabled = false` |
 | Cap a specific guest's pax to less than the site-wide max | give them `, <pax>` in `tools/link-generator.html`'s name list — see § 5 |
+| Invite a guest to only Akad or only Resepsi | give them `, , akad` or `, , resepsi` in `tools/link-generator.html`'s name list — see § 5 |
 | Hide wishes from non-attendees | `Code.gs ▸ HIDE_NON_ATTENDING_WISHES = true`, then re-deploy |
 | Delete a rude message | delete the row in the Google Sheet — it disappears from the site within 30 s |
 | Get an email per RSVP | in Apps Script: **Triggers ▸ Add trigger ▸ `onFormSubmitNotify` ▸ From spreadsheet ▸ On change** |

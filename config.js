@@ -176,7 +176,27 @@ window.WEDDING_CONFIG = {
     }
   },
 
-  /* ---------- 9. RSVP BACKEND ----------
+  /* ---------- 9. PERSONALISED GUEST LINKS (optional) ----------
+     Each entry maps an opaque `code` to a guest's real name/pax/
+     session, so a shared link (index.html?g=AB12CD) doesn't expose
+     or let anyone tamper with that info -- changing the code to
+     something else just fails the lookup and falls back to the
+     generic default greeting.
+
+     Don't type these by hand: use the Excel formula in README.md
+     § 5 to generate a `code` per guest in your spreadsheet, then
+     paste the resulting rows here as
+       { code: "...", name: "...", pax: 2, events: "akad" },
+     `pax` and `events` are optional per guest -- omit either (or
+     leave it "") to fall back to the site-wide default / show both
+     sessions. Leave this whole array empty to not use this feature
+     at all -- the older ?to=&pax=&events= link format (see README)
+     still works either way.                                      */
+  guests: [
+    // { code: "AB12CD", name: "Ade Fitriyani", pax: 2, events: "" },
+  ],
+
+  /* ---------- 10. RSVP BACKEND ----------
      Paste your Apps Script Web App URL here after deploying.
      See README.md → "Google Sheets setup".                      */
   rsvp: {
@@ -187,13 +207,13 @@ window.WEDDING_CONFIG = {
     pollInterval:  30000
   },
 
-  /* ---------- 10. CLOSING ---------- */
+  /* ---------- 11. CLOSING ---------- */
   closing: {
     text: "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu kepada kedua mempelai.",
     signOff: "Kami yang berbahagia,"
   },
 
-  /* ---------- 11. MUSIC ----------
+  /* ---------- 12. MUSIC ----------
      Drop an .mp3 into assets/audio/ and put the path here.
      Leave "" to hide the floating music button entirely.        */
   music: {
@@ -201,7 +221,7 @@ window.WEDDING_CONFIG = {
     autoplay: true          // starts after the guest taps "Open Invitation"
   },
 
-  /* ---------- 12. HIDDEN SECRETS (easter eggs, optional) ----------
+  /* ---------- 13. HIDDEN SECRETS (easter eggs, optional) ----------
      A little hidden game for guests: find all of the secrets below,
      each tied to a real fact about you two, by doing the matching
      interaction somewhere on the site. A bell button (top-right)
@@ -289,7 +309,13 @@ window.WEDDING_CONFIG = {
     ]
   },
 
-  /* ---------- 13. META / SHARING ---------- */
+  /* ---------- 14. META / SHARING ----------
+     These also set the tab title live, but the WhatsApp/FB/etc. link
+     preview banner is read from index.html's <head> directly (that
+     crawler never runs app.js) -- so if you change siteTitle,
+     description, or ogImage here, update the matching <meta> tags at
+     the top of index.html too, or the shared-link banner goes stale.
+     ogImage should be a landscape (roughly 1200x630) photo.         */
   meta: {
     siteTitle:   "Ayila & Zidane — Wedding Invitation",
     description: "24 Oktober 2026 · ARTOTEL Living World Kota Wisata",
