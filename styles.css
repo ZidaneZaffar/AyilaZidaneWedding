@@ -388,6 +388,13 @@ body::after{
 .event__rule{height:1px; background:var(--line); margin:16px auto; width:60%}
 .event__place{margin:0; font-size:15.5px; color:var(--ink-2)}
 .event__addr{margin:4px 0 0; font-size:14.5px; color:var(--muted); line-height:1.7}
+.event__parking{
+  display:flex; align-items:flex-start; gap:8px; text-align:left;
+  margin:14px 0 0; padding:11px 14px; border-radius:10px;
+  background:var(--ivory-2); border:1px solid var(--line);
+  font-size:13px; color:var(--ink-2); line-height:1.6;
+}
+.event__parking-ico{width:15px; height:15px; flex:none; margin-top:2px; color:var(--sage)}
 .event__limited{margin:10px 0 0; font-size:13px; font-style:italic; color:var(--muted); line-height:1.6}
 .event__links{display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:18px}
 .chip{
@@ -649,22 +656,6 @@ textarea{resize:vertical; min-height:110px; line-height:1.7}
 .eggs-modal__img{width:100%; border-radius:10px; margin:0 0 14px; display:block}
 .eggs-modal__text{margin:0 0 20px; font-size:15px; color:var(--ink); line-height:1.8}
 
-/* ---------- VENUE ARRIVAL NOTICE ---------- */
-.venue-modal{
-  position:fixed; inset:0; z-index:80; display:grid; place-items:center;
-  background:rgba(20,24,20,.55); opacity:0; visibility:hidden; pointer-events:none;
-  transition:opacity .3s var(--ease), visibility 0s .3s;
-  padding:calc(env(safe-area-inset-top) + 14px) 18px calc(env(safe-area-inset-bottom) + 14px);
-}
-.venue-modal.is-open{opacity:1; visibility:visible; pointer-events:auto; transition:opacity .3s var(--ease)}
-.venue-modal__card{
-  width:100%; max-width:360px;
-  background:var(--paper); border-radius:var(--r); padding:30px 22px 26px;
-  box-shadow:0 20px 60px rgba(0,0,0,.35); text-align:center;
-}
-.venue-modal__ico{width:30px; height:30px; color:var(--sage); margin:0 auto 12px; display:block}
-.venue-modal__title{font-size:clamp(22px,6vw,28px); margin:0 0 10px}
-.venue-modal__text{margin:0 0 20px; font-size:14.5px; color:var(--muted); line-height:1.75}
 
 /* ---------- TABLET / DESKTOP ---------- */
 @media (min-width:700px){
