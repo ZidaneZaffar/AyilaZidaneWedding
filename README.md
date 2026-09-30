@@ -131,11 +131,13 @@ Either way, the guest's name appears under *"Kepada Yth."* on the cover and pre-
 
 **Inviting someone to only one session:** the session field (3rd, e.g. `, , akad` or `, , resepsi`) shows just that one Events card instead of both. Leave it off and the guest sees both sessions, as usual.
 
-**Generating codes in Excel/Sheets instead of the HTML tool:** if you're managing your guest list as a spreadsheet already, this formula produces the exact same kind of code — deterministic (stable if you re-open/recalculate the sheet, changes only if the name changes), and meaningless on its own. Assumes row 1 is a header row, guest names start in `A2`:
+**Generating codes in Excel/Sheets instead of the HTML tool:** if you're managing your guest list as a spreadsheet already, this formula produces the exact same kind of code — deterministic (stable if you re-open/recalculate the sheet, changes only if the name changes), and meaningless on its own. Works in both Excel (365/2021+) and Google Sheets. Assumes row 1 is a header row, guest names start in `A2` — **replace every `A2` below with whichever cell actually holds the plain guest name in your sheet** if that's a different column:
 
 ```
-=BASE(MOD(SUMPRODUCT(CODE(MID(A2,ROW(INDIRECT("1:"&LEN(A2))),1))*ROW(INDIRECT("1:"&LEN(A2))))*1000003+(ROW()-1)*97,36^6),36,6)
+=IF(A2="","",BASE(MOD(SUMPRODUCT(CODE(MID(A2,SEQUENCE(LEN(A2)),1))*SEQUENCE(LEN(A2)))*1000003+(ROW()-1)*97,36^6),36,6))
 ```
+
+The `IF(A2="","",...)` guard matters: without it, a blank name cell makes the formula error out instead of just leaving that row's code blank.
 
 Fill it down column `E` (or wherever) alongside Name/Pax/Sesi columns, then for each row build the config entry and paste the whole set into `config.js ▸ guests`:
 
