@@ -295,7 +295,7 @@ window.WEDDING_CONFIG = {
       {
         trigger: "greenClick",
         title: "Series Favorit",
-        hint: "Klik warna kesukaan Zidane, atau warna yang akan jadi kesukaan Ayila juga (terpaksa...).",
+        hint: "Klik logo cincin dengan warna kesukaan Zidane, atau warna yang akan jadi kesukaan Ayila juga (terpaksa...).",
         text: "Series yang lagi kita tonton bareng saat ini adalah Lantern.",
         image: ""
       },
