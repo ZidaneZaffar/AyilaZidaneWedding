@@ -281,7 +281,7 @@ window.WEDDING_CONFIG = {
       {
         trigger: "countdownTap",
         title: "Olahraga Pertama",
-        hint: "Ketuk salah satu angka hitung mundur 3 kali.",
+        hint: "Ketuk salah satu angka di countdown 3 kali.",
         text: "Olahraga pertama yang kita lakukan bersama adalah bouldering / panjat tebing.",
         image: ""
       },
