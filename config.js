@@ -194,6 +194,8 @@ window.WEDDING_CONFIG = {
      still works either way.                                      */
   guests: [
     // { code: "AB12CD", name: "Ade Fitriyani", pax: 2, events: "" },
+    { code: "ZZVKS3", name: "Keluarga Suryalaya", pax: null, events: "resepsi" },
+    { code: "C8NEUY", name: "Keluarga Ciamis", pax: null, events: "resepsi" },
   ],
 
   /* ---------- 10. RSVP BACKEND ----------
